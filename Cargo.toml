@@ -1,0 +1,8 @@
+[package]
+name = "st-hub"
+version = "0.1.0"
+authors = ["Jan Christophersen <jan.christophersen@digitalunit.berlin>"]
+edition = "2018"
+
+[dependencies]
+actix-web = "0.7"
