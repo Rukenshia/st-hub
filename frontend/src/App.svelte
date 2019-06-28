@@ -7,8 +7,8 @@
 
 	$battles = [
 		{id: 4711, statistics: { ship: 'Colbert', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
+		{id: 4715, statistics: { ship: 'Le Fantasque', win: false, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
 		{id: 4712, statistics: { ship: 'Colbert', win: true, division: false, damage: Math.round(Math.random() * 100000), kills: 0, hits: 250, survived: false }},
-		{id: 4715, statistics: { ship: 'Le Fantasque', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
 		{id: 4713, statistics: { ship: 'Colbert', win: false, division: false, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: false }},
 		{id: 4714, statistics: { ship: 'Colbert', win: false, division: false, damage: Math.round(Math.random() * 100000), kills: 1, hits: 250, survived: true }},
 		{id: 4715, statistics: { ship: 'Colbert', win: true, division: false, damage: Math.round(Math.random() * 100000), kills: 0, hits: 250, survived: false }},

@@ -1,10 +1,11 @@
 extern crate actix_web;
-use actix_web::{server, App, HttpRequest, Responder};
+use actix_web::{server, App, HttpRequest, Responder, Json, Error};
 
 mod battle;
+use battle::BattleStatistics;
 
-fn index(_req: &HttpRequest) -> &'static str {
-    "Hello world!"
+fn index(_req: &HttpRequest) -> Result<Json<BattleStatistics>, Error> {
+    Ok(Json(BattleStatistics{damage: 1234, division: false, hits: 1, kills: 2, win: false}))
 }
 
 fn get_battles(_req: &HttpRequest) -> impl Responder {
