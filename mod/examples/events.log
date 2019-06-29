@@ -1,0 +1,192 @@
+action.log	{"eventName": "action.log", "event": "system:login"}
+action.clearCommandsState	{"eventName": "action.clearCommandsState"}
+vivox.updatedRenderDevices	{"eventName": "vivox.updatedRenderDevices"}
+vivox.updatedCaptureDevices	{"eventName": "vivox.updatedCaptureDevices"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "premShownCommon", "value": false}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "premShownWOWS", "value": false}
+ModalWindowBuySlots.slotsBought	{"eventName": "ModalWindowBuySlots.slotsBought"}
+dockState.dock	{"eventName": "dockState.dock"}
+action.clearCommandsState	{"eventName": "action.clearCommandsState"}
+window.hide	{"eventName": "window.hide", "windowName": "Waiting"}
+window.hide	{"eventName": "window.hide", "statisticsEvent": "wnd:login", "windowName": "Login"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "operationsSelectedId", "value": "4293438384"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "operationsDifficulty", "value": "normal"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "operationsEnterMM", "value": true}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "operationsSelectedId", "value": "0"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "operationsDifficulty", "value": "normal"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "operationsEnterMM", "value": false}
+sfm.activateDock3D	{"eventName": "sfm.activateDock3D"}
+action.resetInset	{"eventName": "action.resetInset"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "premShownCommon", "value": false}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "premShownWOWS", "value": false}
+window.show	{"eventName": "window.show", "windowName": "Waiting"}
+window.show	{"eventName": "window.show", "windowName": "ModalWindowBattleTypeChooser"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "uiPVEOperationsDifficulty", "value": "normal"}
+window.show	{"eventName": "window.show", "windowName": "ModalWindowPVEOperationChooser"}
+window.show	{"eventName": "window.show", "windowName": "ChatNotificationsPanel"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "curRowCountIndex", "value": 2.0}
+action.ContextGuidingTipClose	{"notification_id": "DockToUserMenu", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToRandomFight", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToModulesExplore", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToTechTreeExploreShip", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToCrew", "eventName": "action.ContextGuidingTipClose"}
+window.show	{"eventName": "window.show", "windowName": "Dock"}
+action.logStart	{"eventName": "action.logStart", "event": "wnd:port.main"}
+action.IngameNewsProxy.getIngameNews	{"eventName": "action.IngameNewsProxy.getIngameNews"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "ChatNotificationsPanel"}
+action.selectedMessageChanged	{"selectedIndex": 0, "selectedEntityId": null, "eventName": "action.selectedMessageChanged"}
+action.setUserPref	{"eventName": "action.setUserPref", "subName": "IM", "name": "IMPositionX", "value": 1296.0}
+action.setUserPref	{"eventName": "action.setUserPref", "subName": "IM", "name": "IMPositionY", "value": 478.0}
+action.selectedMessageChanged	{"selectedIndex": -1.0, "selectedEntityId": null, "eventName": "action.selectedMessageChanged"}
+action.unlockBargeControls	{"eventName": "action.unlockBargeControls"}
+window.hide	{"eventName": "window.hide", "windowName": "Waiting"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "ChatNotificationsPanel"}
+action.onBattleButtonClick	{"eventName": "action.onBattleButtonClick"}
+action.clearCommandsState	{"eventName": "action.clearCommandsState"}
+action.setDockGoToBattle	{"eventName": "action.setDockGoToBattle"}
+window.lostTop	{"eventName": "window.lostTop", "windowName": "ChatNotificationsPanel"}
+window.show	{"eventName": "window.show", "windowName": "Waiting"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "Waiting"}
+dockState.balancer	{"queueType": 2, "scenario": null, "denyReason": 4, "playerShipId": 3760109008, "mapId": null, "maxWaitMin": 0.0, "eventName": "dockState.balancer", "queueTypeIdent": "cooperative", "onlyFullBattles": false, "maxWaitSec": 30.0, "useBots": false, "arcSideId": -1, "rankedBattleStatus": 0}
+action.clearInset	{"queueType": 2, "scenario": null, "denyReason": 4, "playerShipId": 3760109008, "mapId": null, "maxWaitMin": 0.0, "eventName": "action.clearInset", "queueTypeIdent": "cooperative", "onlyFullBattles": false, "maxWaitSec": 30.0, "useBots": false, "arcSideId": -1, "rankedBattleStatus": 0}
+action.clearCommandsState	{"queueType": 2, "scenario": null, "denyReason": 4, "playerShipId": 3760109008, "mapId": null, "maxWaitMin": 0.0, "eventName": "action.clearCommandsState", "queueTypeIdent": "cooperative", "onlyFullBattles": false, "maxWaitSec": 30.0, "useBots": false, "arcSideId": -1, "rankedBattleStatus": 0}
+action.hideTrainingRoomWindow	{"queueType": 2, "scenario": null, "denyReason": 4, "playerShipId": 3760109008, "mapId": null, "maxWaitMin": 0.0, "eventName": "action.hideTrainingRoomWindow", "queueTypeIdent": "cooperative", "onlyFullBattles": false, "maxWaitSec": 30.0, "useBots": false, "arcSideId": -1, "rankedBattleStatus": 0}
+action.resetInset	{"eventName": "action.resetInset"}
+window.hide	{"eventName": "window.hide", "windowName": "Waiting"}
+window.hide	{"eventName": "window.hide", "windowName": "ModalWindowPVEOperationChooser"}
+window.hide	{"eventName": "window.hide", "windowName": "ModalWindowBattleTypeChooser"}
+window.hide	{"eventName": "window.hide", "windowName": "Dock"}
+input.shipOverviewOut	{"eventName": "input.shipOverviewOut"}
+action.logEnd	{"eventName": "action.logEnd", "event": "wnd:port.main"}
+window.show	{"eventName": "window.show", "statisticsEvent": "wnd:battle.balancer", "windowName": "RandomBattle"}
+action.ContextGuidingTipClose	{"notification_id": "DockToCrew", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToUserMenu", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToRandomFight", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToModulesExplore", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToTechTreeExploreShip", "eventName": "action.ContextGuidingTipClose"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "ChatNotificationsPanel"}
+action.setChannelChatBoxIsDisplay	{"eventName": "action.setChannelChatBoxIsDisplay", "entityId": 20867, "state": true}
+action.setChannelChatBoxIsDisplay	{"eventName": "action.setChannelChatBoxIsDisplay", "entityId": 20867, "state": false}
+action.setChannelChatBoxIsDisplay	{"eventName": "action.setChannelChatBoxIsDisplay", "entityId": 20909, "state": true}
+action.setChannelChatBoxIsDisplay	{"eventName": "action.setChannelChatBoxIsDisplay", "entityId": 20909, "state": false}
+action.clearCommandsState	{"eventName": "action.clearCommandsState"}
+window.show	{"eventName": "window.show", "windowName": "Waiting"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "ChatNotificationsPanel"}
+sfm.battleLoadingStarted	{"eventName": "sfm.battleLoadingStarted"}
+window.lostTop	{"eventName": "window.lostTop", "windowName": "ChatNotificationsPanel"}
+window.becomeTop	{"eventName": "window.becomeTop", "windowName": "Waiting"}
+action.clearCommandsState	{"eventName": "action.clearCommandsState"}
+window.hide	{"eventName": "window.hide", "windowName": "Waiting"}
+window.hide	{"eventName": "window.hide", "windowName": "ChatNotificationsPanel"}
+window.hide	{"eventName": "window.hide", "statisticsEvent": "wnd:battle.balancer", "windowName": "RandomBattle"}
+window.show	{"eventName": "window.show", "statisticsEvent": "wnd:battle.loading", "windowName": "LoadingBattle"}
+action.BattleHints.refresh	{"eventName": "action.BattleHints.refresh"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "LoadingBattle"}
+request.showBattle	{"eventName": "request.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.clearCommandsState	{"eventName": "action.clearCommandsState"}
+window.hide	{"eventName": "window.hide", "statisticsEvent": "wnd:battle.loading", "windowName": "LoadingBattle"}
+window.show	{"eventName": "window.show", "statisticsEvent": "wnd:battle.battle", "windowName": "Battle"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "Battle"}
+action.battleChat.shown	{"eventName": "action.battleChat.shown"}
+action.battleChat.rollOverChanged	{"eventName": "action.battleChat.rollOverChanged", "rollOver": false}
+input.chatOverOut	{"eventName": "input.chatOverOut"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.showBattle	{"eventName": "action.showBattle"}
+action.clearCommandsState	{"eventName": "action.clearCommandsState", "arenaId": 3045081835091948, "result": 1, "finishReason": 12}
+window.hide	{"eventName": "window.hide", "statisticsEvent": "wnd:battle.battle", "windowName": "Battle"}
+window.show	{"eventName": "window.show", "windowName": "PostBattle"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "PostBattle"}
+action.clearCommandsState	{"eventName": "action.clearCommandsState"}
+sfm.createdReallyAccount	{"eventName": "sfm.createdReallyAccount"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "premShownCommon", "value": false}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "premShownWOWS", "value": false}
+action.clearCommandsState	{"eventName": "action.clearCommandsState"}
+sfm.showResultScreen	{"eventName": "sfm.showResultScreen"}
+window.lostTop	{"eventName": "window.lostTop", "windowName": "PostBattle"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "premShownCommon", "value": false}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "premShownWOWS", "value": false}
+window.show	{"eventName": "window.show", "statisticsEvent": "wnd:battle.results", "windowName": "ResultsScreen"}
+sfm.goToDock	{"eventName": "sfm.goToDock"}
+dockState.dock	{"eventName": "dockState.dock"}
+sfm.activateDock3D	{"eventName": "sfm.activateDock3D"}
+window.hide	{"eventName": "window.hide", "statisticsEvent": "wnd:battle.results", "windowName": "ResultsScreen"}
+window.hide	{"eventName": "window.hide", "windowName": "PostBattle"}
+window.show	{"eventName": "window.show", "windowName": "ModalWindowBattleTypeChooser"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "uiPVEOperationsDifficulty", "value": "normal"}
+window.show	{"eventName": "window.show", "windowName": "ModalWindowPVEOperationChooser"}
+window.show	{"eventName": "window.show", "windowName": "ChatNotificationsPanel"}
+window.show	{"eventName": "window.show", "windowName": "Waiting"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "curRowCountIndex", "value": 2.0}
+action.ContextGuidingTipClose	{"notification_id": "DockToUserMenu", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToRandomFight", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToModulesExplore", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToTechTreeExploreShip", "eventName": "action.ContextGuidingTipClose"}
+action.ContextGuidingTipClose	{"notification_id": "DockToCrew", "eventName": "action.ContextGuidingTipClose"}
+action.unlockBargeControls	{"eventName": "action.unlockBargeControls"}
+window.show	{"eventName": "window.show", "windowName": "Dock"}
+action.logStart	{"eventName": "action.logStart", "event": "wnd:port.main"}
+action.IngameNewsProxy.getIngameNews	{"eventName": "action.IngameNewsProxy.getIngameNews"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "ChatNotificationsPanel"}
+action.selectedMessageChanged	{"selectedIndex": 0, "selectedEntityId": null, "eventName": "action.selectedMessageChanged"}
+action.setUserPref	{"eventName": "action.setUserPref", "subName": "IM", "name": "IMPositionX", "value": 1296.0}
+action.setUserPref	{"eventName": "action.setUserPref", "subName": "IM", "name": "IMPositionY", "value": 478.0}
+action.selectedMessageChanged	{"selectedIndex": -1.0, "selectedEntityId": null, "eventName": "action.selectedMessageChanged"}
+window.hide	{"eventName": "window.hide", "windowName": "Waiting"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "ChatNotificationsPanel"}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 21063}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 5036}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 21064}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 21063}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 5036}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 21064}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 21034}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 21185}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 21187}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 21034}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 21185}
+action.hideSystemMessage	{"eventName": "action.hideSystemMessage", "id": 21187}
+action.setChannelChatBoxIsDisplay	{"eventName": "action.setChannelChatBoxIsDisplay", "entityId": 20909, "state": true}
+action.setChannelChatBoxIsDisplay	{"eventName": "action.setChannelChatBoxIsDisplay", "entityId": 20909, "state": false}
+input.shipOverviewIn	{"eventName": "input.shipOverviewIn"}
+input.shipOverviewOut	{"eventName": "input.shipOverviewOut"}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "premShownCommon", "value": false}
+action.setUserPref	{"eventName": "action.setUserPref", "name": "premShownWOWS", "value": false}
+input.shipOverviewIn	{"eventName": "input.shipOverviewIn"}
+input.shipOverviewOut	{"eventName": "input.shipOverviewOut"}
+action.clearCommandsState	{"eventName": "action.clearCommandsState"}
+window.lostTop	{"eventName": "window.lostTop", "windowName": "ChatNotificationsPanel"}
+window.show	{"eventName": "window.show", "statisticsEvent": "wnd:modal.notification", "windowName": "SimpleModalWindow"}
+up.exitGame	{"eventName": "up.exitGame"}
+action.flushUIStats	{"eventName": "action.flushUIStats"}
+window.hide	{"eventName": "window.hide", "statisticsEvent": "wnd:modal.notification", "windowName": "SimpleModalWindow"}
+window.becomeTopInFlash	{"eventName": "window.becomeTopInFlash", "windowName": "ChatNotificationsPanel"}
+window.hide	{"eventName": "window.hide", "windowName": "Dock"}
+action.logEnd	{"eventName": "action.logEnd", "event": "wnd:port.main"}
+input.shipOverviewOut	{"eventName": "input.shipOverviewOut"}
+window.hide	{"eventName": "window.hide", "windowName": "ModalWindowBattleTypeChooser"}
+window.hide	{"eventName": "window.hide", "windowName": "ModalWindowPVEOperationChooser"}
+window.hide	{"eventName": "window.hide", "windowName": "ChatNotificationsPanel"}
