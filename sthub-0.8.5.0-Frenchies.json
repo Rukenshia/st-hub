@@ -1,0 +1,29 @@
+{
+    "ClientVersion": "0.8.5.0",
+    "IterationName": "Frenchies",
+    "WowsUserId": "4711",
+    "Ships": [123],
+    "Battles": [
+        {
+            "Status": "finished",
+            "Ship": 1234567,
+            "ShipName": "Colbert",
+            "Statistics": {
+                "Win": true,
+                "Damage": {
+                    "Value": 30000,
+                    "Corrected": null
+                },
+                "Kills": {
+                    "Value": 2,
+                    "Corrected": null
+                },
+                "Survived": true,
+                "InDivision": {
+                    "Value": false,
+                    "Corrected": null
+                }
+            }
+        }
+    ]
+}
