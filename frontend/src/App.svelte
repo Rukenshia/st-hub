@@ -1,34 +1,30 @@
 <script>
-	import { battles } from './stores';
-	import Navigation from './Navigation.svelte';
+	import { battles, iteration } from './stores';
 	import DivisionStatistics from './DivisionStatistics.svelte';
+	import AppBar from './AppBar.svelte';
 	import Battles from './Battles.svelte';
-	import Feed from './Feed.svelte';
+	import axios from 'axios';
+	import { onMount } from 'svelte';
 
-	$battles = [
-		{id: 4711, statistics: { ship: 'Colbert', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
-		{id: 4715, statistics: { ship: 'Le Fantasque', win: false, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
-		{id: 4712, statistics: { ship: 'Colbert', win: true, division: false, damage: Math.round(Math.random() * 100000), kills: 0, hits: 250, survived: false }},
-		{id: 4713, statistics: { ship: 'Colbert', win: false, division: false, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: false }},
-		{id: 4714, statistics: { ship: 'Colbert', win: false, division: false, damage: Math.round(Math.random() * 100000), kills: 1, hits: 250, survived: true }},
-		{id: 4715, statistics: { ship: 'Colbert', win: true, division: false, damage: Math.round(Math.random() * 100000), kills: 0, hits: 250, survived: false }},
-		{id: 4714, statistics: { ship: 'Le Fantasque', win: false, division: false, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: false }},
-		{id: 4716, statistics: { ship: 'Le Fantasque', win: false, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
-		{id: 4716, statistics: { ship: 'Colbert', win: false, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
-		{id: 4717, statistics: { ship: 'Colbert', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: false }},
-		{id: 4718, statistics: { ship: 'Le Fantasque', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
-		{id: 4719, statistics: { ship: 'Slava', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
-		{id: 4720, statistics: { ship: 'Slava', win: true, division: false, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: false }},
-		{id: 4721, statistics: { ship: 'Slava', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: false }},
-		{id: 4720, statistics: { ship: 'Slava', win: true, division: false, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
-		{id: 4721, statistics: { ship: 'Slava', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: false }},
-		{id: 4722, statistics: { ship: 'Slava', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
-		{id: 4723, statistics: { ship: 'Slava', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250, survived: true }},
-	];
+	const fetchIntegration = () => {
+		return axios.get('http://localhost:1323/iterations/current');
+	};
 
-	function addBattle() {
-		$battles = [...$battles, {id: 4723, statistics: { ship: 'Slava', win: true, division: true, damage: Math.round(Math.random() * 100000), kills: 2, hits: 250 }}];
-	}
+	const fetchBattles = () => {
+		return axios.get(`http://localhost:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`);
+	};
+
+	onMount(async () => {
+		const res = await fetchIntegration();
+		$iteration = res.data;
+		const resBattles = await fetchBattles();
+		$battles = resBattles.data;
+
+		setInterval(async () => {
+			const resBattles = await fetchBattles();
+			$battles = resBattles.data;
+		}, 2500);
+	});
 </script>
 
 <style global lang="scss">
@@ -36,22 +32,18 @@
 
 body {
 	@include mdc-typography-base();
+	width: 100%;
+}
+
+header {
+	margin: -8px;
 }
 </style>
 
+<AppBar iteration={$iteration} />
+
 <DivisionStatistics/>
-
-<button on:click={addBattle}>Add Slava Battle</button>
-
-<Navigation links={["battles", "feed"]}>
-	<span slot="battles">
-		<Battles />
-	</span>
-
-	<span slot="feed">
-		<Feed/>
-	</span>
-</Navigation>
+<Battles />
 
 <footer>
 	<div class="mdc-typography--subtitle2" style="text-align: center;">

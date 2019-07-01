@@ -4,12 +4,12 @@
     import ShipStatistics from './ShipStatistics.svelte';
 
     const shipNames = derived(battles,
-        $battles => [...new Set($battles.map(b => b.statistics.ship))]);
+        $battles => [...new Set($battles.map(b => b.ShipName))]);
 
     const selectedShip = writable('all');
 
     const filteredBattles = derived([battles, selectedShip],
-        ([b, s]) => b.filter(b => b.statistics.ship === s || s === 'all'));
+        ([b, s]) => b.filter(b => b.ShipName  === s || s === 'all'));
 </script>
 
 <style lang="scss">
@@ -67,18 +67,24 @@
                         <div class="mdc-layout-grid__inner">
                             <div class="mdc-layout-grid__cell mdc-layout-grid__cell">
                                 <h2 class="battle-card__title mdc-typography--headline6">
-                                    {battle.statistics.ship}
+                                    {battle.ShipName}
                                 </h2>
                             </div>
                             <div class="mdc-layout-grid__cell">
                                 <div class="mdc-chip-set">
-                                    <div class="mdc-chip" class:loss={!battle.statistics.win}>
-                                        <div class="mdc-chip__text">{battle.statistics.win ? 'Win' : 'Loss'}</div>
-                                    </div>
-                                    {#if battle.statistics.division}
+                                    {#if battle.Status === 'active'}
                                     <div class="mdc-chip">
-                                        <div class="mdc-chip__text">Division</div>
+                                        <div class="mdc-chip__text">In Battle</div>
                                     </div>
+                                    {:else}
+                                        <div class="mdc-chip" class:loss={!battle.Statistics.Win}>
+                                            <div class="mdc-chip__text">{battle.Statistics.Win ? 'Win' : 'Loss'}</div>
+                                        </div>
+                                        {#if battle.Statistics.InDivision}
+                                        <div class="mdc-chip">
+                                            <div class="mdc-chip__text">Division</div>
+                                        </div>
+                                        {/if}
                                     {/if}
                                 </div>
                             </div>
@@ -88,7 +94,7 @@
                     
 
                     <p>
-                        Damage: {battle.statistics.damage}
+                        Damage (raw): {battle.Statistics.Damage.Value}
                     </p>
                 </div>
             </div>

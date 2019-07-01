@@ -4,16 +4,17 @@ import "time"
 
 // Battle is a match played in the game
 type Battle struct {
+	ID         string // xid of the battle
 	FinishedAt *time.Time
 	StartedAt  *time.Time
 	Status     string
 	Ship       uint64
 	ShipName   string
-	Statistics BattleStatistics
+	Statistics Statistics
 }
 
-// BattleStatistics contains basic statistics used by the frontend
-type BattleStatistics struct {
+// Statistics contains basic statistics used by the frontend
+type Statistics struct {
 	InDivision CorrectableBool
 	Win        bool
 	Survived   bool
