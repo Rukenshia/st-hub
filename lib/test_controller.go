@@ -85,6 +85,7 @@ func (t *TestController) getFileFromContext(c echo.Context) (*TestIterationFile,
 func (t *TestController) RegisterRoutes(g *echo.Group) {
 	g.GET("/:clientVersion/:iteration", t.GetIteration)
 	g.GET("/:clientVersion/:iteration/battles", t.GetBattles)
+	g.PUT("/:clientVersion/:iteration/battles/:battle", t.UpdateBattle)
 
 	g.GET("/current", t.GetCurrentIteration)
 	g.POST("/current/battle", t.StartBattle)
@@ -203,7 +204,7 @@ func (t *TestController) UpdateBattle(c echo.Context) error {
 	}
 
 	// Check that unchangeable fields have not changed
-	if req.StartedAt != file.Battles[index].StartedAt {
+	if req.StartedAt.String() != file.Battles[index].StartedAt.String() {
 		c.String(400, "Can not change battle start time")
 		return nil
 	}
