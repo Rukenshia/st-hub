@@ -76,5 +76,5 @@ func main() {
 	}()
 
 	// Start server
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start("127.0.0.1:1323"))
 }

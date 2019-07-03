@@ -9,7 +9,7 @@
         if (p[c.Ship]) {
           p[c.Ship].battles++;
 
-          if (c.Statistics.InDivision) {
+          if (c.Statistics.InDivision.Value) {
             p[c.Ship].division++;
           }
 
@@ -20,8 +20,8 @@
           p[c.Ship] = {
             name: c.ShipName,
             battles: 1,
-            division: c.Statistics.InDivision ? 1 : 0,
-            rate: c.Statistics.InDivision ? 100 : 0,
+            division: c.Statistics.InDivision.Value ? 1 : 0,
+            rate: c.Statistics.InDivision.Value ? 100 : 0,
           };
         }
 

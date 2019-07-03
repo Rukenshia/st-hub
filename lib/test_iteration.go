@@ -8,11 +8,17 @@ import (
 	"sthub/lib/battle"
 )
 
+// TestShip represents basic info on a Warship for testing
+type TestShip struct {
+	ID   uint64
+	Name string
+}
+
 // TestIteration is a struct representing a raw iteration cycle
 type TestIteration struct {
 	ClientVersion string
 	IterationName string
-	Ships         []uint64
+	Ships         []TestShip
 }
 
 // TestIterationFile represents a on-disk stored
@@ -74,4 +80,14 @@ func (f *TestIterationFile) Save() error {
 	}
 
 	return ioutil.WriteFile(f.filename, data, 0666)
+}
+
+// HasShip checks whether a ship is part of this test iteration
+func (t *TestIteration) HasShip(id uint64) bool {
+	for _, s := range t.Ships {
+		if s.ID == id {
+			return true
+		}
+	}
+	return false
 }

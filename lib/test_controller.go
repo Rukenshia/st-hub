@@ -2,6 +2,7 @@ package lib
 
 import (
 	"fmt"
+	"log"
 	"sthub/lib/battle"
 	"time"
 
@@ -88,7 +89,8 @@ func (t *TestController) RegisterRoutes(g *echo.Group) {
 	g.PUT("/:clientVersion/:iteration/battles/:battle", t.UpdateBattle)
 
 	g.GET("/current", t.GetCurrentIteration)
-	g.POST("/current/battle", t.StartBattle)
+	g.POST("/current/battles", t.StartBattle)
+	g.POST("/current/battles/active", t.UpdateActiveBattle)
 }
 
 func (t *TestController) GetCurrentIteration(c echo.Context) error {
@@ -144,6 +146,11 @@ func (t *TestController) StartBattle(c echo.Context) error {
 		return err
 	}
 
+	if !t.currentIteration.HasShip(req.ShipID) {
+		c.String(400, "Ship not part of testing iteration")
+		return nil
+	}
+
 	now := time.Now()
 
 	battle := &battle.Battle{
@@ -194,14 +201,7 @@ func (t *TestController) UpdateBattle(c echo.Context) error {
 		return nil
 	}
 
-	if file.Battles[index].ID != t.activeBattle.battle.ID {
-		c.String(400, "Can only modify active battle")
-		return nil
-	}
-
-	if req.Status == "finished" {
-		t.activeBattle = nil
-	}
+	log.Printf(">>> %v", req.Statistics.InDivision.Value)
 
 	// Check that unchangeable fields have not changed
 	if req.StartedAt.String() != file.Battles[index].StartedAt.String() {
@@ -210,6 +210,51 @@ func (t *TestController) UpdateBattle(c echo.Context) error {
 	}
 
 	file.Battles[index] = req
+
+	return c.JSON(200, req)
+}
+
+func (t *TestController) UpdateActiveBattle(c echo.Context) error {
+	if t.activeBattle == nil {
+		c.String(404, "No active battle")
+		return nil
+	}
+
+	req := new(battle.Battle)
+	if err := c.Bind(req); err != nil {
+		return err
+	}
+
+	if req.ID != t.activeBattle.battle.ID {
+		c.String(400, "Can only modify active battle")
+		return nil
+	}
+
+	// Check that unchangeable fields have not changed
+	if req.StartedAt.Format(time.UnixDate) != t.activeBattle.battle.StartedAt.Format(time.UnixDate) {
+		c.String(400, "Can not change battle start time")
+		return nil
+	}
+
+	index := -1
+	for i, b := range t.activeBattle.file.Battles {
+		if b == t.activeBattle.battle {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		c.String(500, "Internal error getting active battle")
+		return nil
+	}
+
+	*t.activeBattle.battle = *req
+	t.activeBattle.file.Save()
+
+	if req.Status == "finished" {
+		t.activeBattle = nil
+	}
 
 	return c.JSON(200, req)
 }

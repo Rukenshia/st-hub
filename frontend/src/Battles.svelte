@@ -80,7 +80,7 @@
                                         <div class="mdc-chip" class:loss={!battle.Statistics.Win}>
                                             <div class="mdc-chip__text">{battle.Statistics.Win ? 'Win' : 'Loss'}</div>
                                         </div>
-                                        {#if battle.Statistics.InDivision}
+                                        {#if battle.Statistics.InDivision.Value}
                                         <div class="mdc-chip">
                                             <div class="mdc-chip__text">Division</div>
                                         </div>
