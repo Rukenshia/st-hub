@@ -1,7 +1,8 @@
 <script>
-  import { derived } from "svelte/store";
-  import { battles } from "./stores";
-  import DivisionRate from "./DivisionRate.svelte";
+  import { derived } from 'svelte/store';
+  import { battles } from './stores';
+  import DivisionRate from './DivisionRate.svelte';
+  import TeamSvg from './svg/team.svelte';
 
   let ships = derived(battles, $battles =>
     Object.values(
@@ -75,10 +76,7 @@
         <div class="mdc-layout-grid mdc-layout-grid--align-left">
           <div class="mdc-layout-grid__inner">
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-1">
-              <img
-                alt="division"
-                src="./team.svg"
-                class="div-card__title-icon" />
+              <TeamSvg />
             </div>
             <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-11">
               <h2 class="div-card__title mdc-typography--headline6">

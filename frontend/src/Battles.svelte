@@ -12,32 +12,47 @@
         ([b, s]) => b.filter(b => b.ShipName  === s || s === 'all'));
 </script>
 
-<style lang="scss">
+<style global lang="scss">
 @import '@material/card/mdc-card';
 @import '@material/chips/mdc-chips';
 @import '@material/layout-grid/mdc-layout-grid';
 
-.battle-card {
-    .battle-card__primary {
-        padding: 1rem;
+body {
+    .battle-card {
+        .battle-card__primary {
+            padding: 1rem;
 
-        .battle-card__title {
-            margin: 0;
+            .battle-card__title {
+                margin: 0;
+            }
+
+            .mdc-layout-grid {
+                padding: 0;
+            }
+
+            .mdc-chip-set {
+                padding-left: 0;
+                padding-top: 0;
+                .mdc-chip {
+                    @include mdc-chip-height(24px);
+                    font-size: 12px;
+
+                    &.loss {
+                        @include mdc-chip-fill-color(#fedede);
+                    }
+                }
+            }
         }
+    }
 
-        .mdc-layout-grid {
-            padding: 0;
-        }
-
-        .mdc-chip-set {
-            padding-left: 0;
-            padding-top: 0;
+    &.dark {      
+        .battle-card .battle-card__primary .mdc-chip-set {
             .mdc-chip {
-                @include mdc-chip-height(24px);
-                font-size: 12px;
-
+                @include mdc-chip-fill-color(lighten(#121212, 11%));
+                color: #cecece;
                 &.loss {
-                    @include mdc-chip-fill-color(#fedede);
+                    @include mdc-chip-fill-color(#ff574a);
+                    color: rgba(0, 0, 0, 0.87);
                 }
             }
         }

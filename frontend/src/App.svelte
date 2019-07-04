@@ -1,5 +1,5 @@
 <script>
-	import { battles, iteration } from './stores';
+	import { battles, iteration, darkMode } from './stores';
 	import DivisionStatistics from './DivisionStatistics.svelte';
 	import ShipsList from './ShipsList.svelte';
 	import AppBar from './AppBar.svelte';
@@ -8,11 +8,11 @@
 	import { onMount } from 'svelte';
 
 	const fetchIntegration = () => {
-		return axios.get('http://100.115.92.205:1323/iterations/current');
+		return axios.get('http://localhost:1323/iterations/current');
 	};
 
 	const fetchBattles = () => {
-		return axios.get(`http://100.115.92.205:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`);
+		return axios.get(`http://localhost:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`);
 	};
 
 	onMount(async () => {
@@ -26,6 +26,14 @@
 			$battles = resBattles.data;
 		}, 2500);
 	});
+
+	darkMode.subscribe(v => {
+		if (v) {
+			document.body.classList.add('dark');
+		} else {
+			document.body.classList.remove('dark');
+		}
+	});
 </script>
 
 <style global lang="scss">
@@ -34,6 +42,21 @@
 body {
 	@include mdc-typography-base();
 	width: 100%;
+
+	
+	&.dark {
+		color: #cecece;
+		background-color: #121212;
+
+		.mdc-card {
+			background-color: lighten(#121212, 5%);
+		}
+
+		svg {
+			stroke: #cecece;
+			fill: #cecece;
+		}
+	}
 }
 
 header {
