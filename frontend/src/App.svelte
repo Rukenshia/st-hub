@@ -1,5 +1,5 @@
 <script>
-	import { battles, iteration, darkMode } from './stores';
+	import { battles, iteration, darkMode, activeBattle } from './stores';
 	import DivisionStatistics from './DivisionStatistics.svelte';
 	import ShipsList from './ShipsList.svelte';
 	import AppBar from './AppBar.svelte';
@@ -20,10 +20,12 @@
 		$iteration = res.data;
 		const resBattles = await fetchBattles();
 		$battles = resBattles.data;
+		$activeBattle = $battles.find(b => b.Status === 'active');
 
 		setInterval(async () => {
 			const resBattles = await fetchBattles();
 			$battles = resBattles.data;
+			$activeBattle = $battles.find(b => b.Status === 'active');
 		}, 2500);
 	});
 

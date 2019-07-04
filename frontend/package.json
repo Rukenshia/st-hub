@@ -35,6 +35,7 @@
     "svelte-preprocess": "^2.14.0"
   },
   "dependencies": {
+    "@material/select": "^3.0.0",
     "@material/switch": "^3.0.0",
     "@material/top-app-bar": "^3.0.0",
     "axios": "^0.19.0",

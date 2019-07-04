@@ -1,6 +1,9 @@
 <script>
+    import { onMount } from 'svelte';
     import { derived, writable } from 'svelte/store';
     import { battles } from './stores';
+    import { MDCSelect } from '@material/select';
+    import Swords from './svg/swords.svelte';
     import ShipStatistics from './ShipStatistics.svelte';
 
     const shipNames = derived(battles,
@@ -10,11 +13,16 @@
 
     const filteredBattles = derived([battles, selectedShip],
         ([b, s]) => b.filter(b => b.ShipName  === s || s === 'all'));
+
+    onMount(() => {
+        new MDCSelect(document.querySelector('.mdc-select'));
+    });
 </script>
 
 <style global lang="scss">
 @import '@material/card/mdc-card';
 @import '@material/chips/mdc-chips';
+@import "@material/select/mdc-select";
 @import '@material/layout-grid/mdc-layout-grid';
 
 body {
@@ -56,23 +64,58 @@ body {
                 }
             }
         }
+
+        .mdc-select {
+            @include mdc-select-container-fill-color(lighten(#121212, 5%));
+            @include mdc-select-focused-label-color(lighten(rgba(98,0,238,0.87), 25%));
+            @include mdc-select-focused-bottom-line-color(lighten(rgba(98,0,238,0.87), 25%));
+            
+            .mdc-floating-label, .mdc-select__native-control {
+                color: #cecece;
+
+                option {
+                    background-color: lighten(#121212, 5%);
+                }
+            }
+        }
     }
 }
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    text-indent: 1px;
+    text-overflow: '';
+}
+
 </style>
 
-<select bind:value={$selectedShip}>
-    <option value='all'>all</option>
-    {$shipNames}
-    {#each $shipNames as name}
-        <option value={name}>{name}</option>
-    {/each}
-</select>
+<h2 class="mdc-typography--headline4">Battles</h2>
+
+<div class="mdc-layout-grid">
+    <div class="mdc-layout-grid__inner">
+        <div class="mdc-layout-grid__cell">
+            <div class="mdc-select">
+                <i class="mdc-select__dropdown-icon"></i>
+                <select class="mdc-select__native-control" bind:value={$selectedShip}>
+                    <option value='all'>all</option>
+                    {$shipNames}
+                    {#each $shipNames as name}
+                        <option value={name}>{name}</option>
+                    {/each}
+                </select>
+                <label class="mdc-floating-label">Pick a ship</label>
+                <div class="mdc-line-ripple"></div>
+            </div>
+        </div>
+    </div>
+</div>
 
 {#if $selectedShip !== 'all'}
 <ShipStatistics ship={$selectedShip} battles={$filteredBattles} />
 {/if}
 
-<div class="mdc-layout-grid">
+<div class="mdc-layout-grid battles">
     <div class="mdc-layout-grid__inner">
         {#each $filteredBattles as battle}
         <div class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
@@ -80,37 +123,48 @@ body {
                 <div class="battle-card__primary">
                     <div class="mdc-layout-grid">
                         <div class="mdc-layout-grid__inner">
-                            <div class="mdc-layout-grid__cell mdc-layout-grid__cell">
-                                <h2 class="battle-card__title mdc-typography--headline6">
-                                    {battle.ShipName}
-                                </h2>
+                            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-1-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-2-phone">
+                                {#if battle.Status === 'active'}
+                                    <Swords />
+                                {/if}
                             </div>
-                            <div class="mdc-layout-grid__cell">
-                                <div class="mdc-chip-set">
-                                    {#if battle.Status === 'active'}
-                                    <div class="mdc-chip">
-                                        <div class="mdc-chip__text">In Battle</div>
+                            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-11-desktop mdc-layout-grid__cell--span-7-tablet mdc-layout-grid__cell--span-2-phone">
+                                <div class="mdc-layout-grid">
+                                    <div class="mdc-layout-grid__inner">
+                                        <div class="mdc-layout-grid__cell">
+                                            <h2 class="battle-card__title mdc-typography--headline5">
+                                                {battle.ShipName}
+                                            </h2>
+                                        </div>
+                                        <div class="mdc-layout-grid__cell">
+                                            <div class="mdc-chip-set">
+                                                {#if battle.Status === 'active'}
+                                                <div class="mdc-chip">
+                                                    <div class="mdc-chip__text">In Battle</div>
+                                                </div>
+                                                {:else}
+                                                    <div class="mdc-chip" class:loss={!battle.Statistics.Win}>
+                                                        <div class="mdc-chip__text">{battle.Statistics.Win ? 'Win' : 'Loss'}</div>
+                                                    </div>
+                                                    {#if battle.Statistics.InDivision.Value}
+                                                    <div class="mdc-chip">
+                                                        <div class="mdc-chip__text">Division</div>
+                                                    </div>
+                                                    {/if}
+                                                {/if}
+                                            </div>
+                                        </div>
                                     </div>
-                                    {:else}
-                                        <div class="mdc-chip" class:loss={!battle.Statistics.Win}>
-                                            <div class="mdc-chip__text">{battle.Statistics.Win ? 'Win' : 'Loss'}</div>
-                                        </div>
-                                        {#if battle.Statistics.InDivision.Value}
-                                        <div class="mdc-chip">
-                                            <div class="mdc-chip__text">Division</div>
-                                        </div>
-                                        {/if}
-                                    {/if}
                                 </div>
-                            </div>
+
+                            <p>
+                                Damage (raw): {battle.Statistics.Damage.Value}
+                            </p>
+                            </div> 
                         </div>
                     </div>
                     
                     
-
-                    <p>
-                        Damage (raw): {battle.Statistics.Damage.Value}
-                    </p>
                 </div>
             </div>
         </div>

@@ -2,6 +2,8 @@ import {readable, writable} from 'svelte/store';
 
 export const battles = writable([]);
 
+export const activeBattle = writable(undefined);
+
 export const iteration = writable({
   clientVersion: '',
   iterationName: '',
