@@ -1,17 +1,18 @@
 <script>
 	import { battles, iteration } from './stores';
 	import DivisionStatistics from './DivisionStatistics.svelte';
+	import ShipsList from './ShipsList.svelte';
 	import AppBar from './AppBar.svelte';
 	import Battles from './Battles.svelte';
 	import axios from 'axios';
 	import { onMount } from 'svelte';
 
 	const fetchIntegration = () => {
-		return axios.get('http://localhost:1323/iterations/current');
+		return axios.get('http://100.115.92.205:1323/iterations/current');
 	};
 
 	const fetchBattles = () => {
-		return axios.get(`http://localhost:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`);
+		return axios.get(`http://100.115.92.205:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`);
 	};
 
 	onMount(async () => {
@@ -43,6 +44,9 @@ header {
 <AppBar iteration={$iteration} />
 
 <DivisionStatistics/>
+
+<ShipsList ships={$iteration.Ships} />
+
 <Battles />
 
 <footer>

@@ -1,4 +1,4 @@
-import {writable} from 'svelte/store';
+import {readable, writable} from 'svelte/store';
 
 export const battles = writable([]);
 
@@ -7,3 +7,5 @@ export const iteration = writable({
   iterationName: '',
   ships: [],
 });
+
+export const clientId = readable('2ecce5b4b0ffcffc5e7bc04131fb5c8e');
