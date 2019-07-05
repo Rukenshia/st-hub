@@ -1,8 +1,17 @@
 <script>
-  import { clientId, activeBattle } from './stores';
+  import { derived } from 'svelte/store';
+  import { clientId, activeBattle, battles } from './stores';
   import Swords from './svg/swords.svelte';
+  import ShipStatistics from './ShipStatistics.svelte';
 
   export let ships = [];
+
+  export let showInfo = {};
+
+  function toggle(shipName) {
+    showInfo[shipName] = !(showInfo[shipName] || false);
+    console.log(showInfo);
+  }
 </script>
 
 <style lang="scss">
@@ -15,6 +24,17 @@
 
   font-weight: normal;
 }
+
+.ship-card {
+  transition: height .2s;
+}
+
+.sl-toggle {
+  top: 8px;
+  right: 8px;
+  transform: translateY(50%);
+  position: absolute;
+}
 </style>
 
 <h2 class="mdc-typography--headline4">Ships in this test iteration</h2>
@@ -22,21 +42,25 @@
 <div class="mdc-layout-grid">
   <div class="mdc-layout-grid__inner">
     {#each ships as ship}
-    <div class="mdc-layout-grid__cell mdc-card">
-      <div class="mdc-card__primary-action">
-        <div class="mdc-layout-grid mdc-layout-grid--align-left">
-          <div class="mdc-layout-grid__inner">
-            {#if $activeBattle && $activeBattle.Ship === ship.ID}
-            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-1-phone">
-                <Swords />
-            </div>
-            {/if}
-            <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-6-tablet mdc-layout-grid__cell--span-2-phone">
-              <h2 class="ship-card__title mdc-typography--headline6">
-                {ship.Name}
-              </h2>
+    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4">
+      <div class="mdc-card ship-card">
+        <div on:click="{() => toggle(ship.Name)}" class="mdc-card__primary-action">
+          <div class="mdc-layout-grid mdc-layout-grid--fixed-column-width mdc-layout-grid--align-left">
+            <div class="mdc-layout-grid__inner">
+              <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+                <h2 class="ship-card__title mdc-typography--headline6">
+                  {ship.Name}
+                </h2>
+              </div>
             </div>
           </div>
+          <div class="sl-toggle">
+            <i class="material-icons">arrow_drop_down</i>
+          </div>
+
+          {#if showInfo[ship.Name]}
+            <ShipStatistics ship={ship.Name} battles={$battles.filter(b => b.ShipName === ship.Name)} />
+          {/if}
         </div>
       </div>
     </div>

@@ -4,15 +4,11 @@
     import { battles } from './stores';
     import { MDCSelect } from '@material/select';
     import Swords from './svg/swords.svelte';
-    import ShipStatistics from './ShipStatistics.svelte';
 
     const shipNames = derived(battles,
         $battles => [...new Set($battles.map(b => b.ShipName))]);
 
     const selectedShip = writable('all');
-
-    const filteredBattles = derived([battles, selectedShip],
-        ([b, s]) => b.filter(b => b.ShipName  === s || s === 'all'));
 
     onMount(() => {
         new MDCSelect(document.querySelector('.mdc-select'));
@@ -111,13 +107,9 @@ select {
     </div>
 </div>
 
-{#if $selectedShip !== 'all'}
-<ShipStatistics ship={$selectedShip} battles={$filteredBattles} />
-{/if}
-
 <div class="mdc-layout-grid battles">
     <div class="mdc-layout-grid__inner">
-        {#each $filteredBattles as battle}
+        {#each $battles as battle}
         <div class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
             <div class="mdc-card__primary-action battle-card">
                 <div class="battle-card__primary">
