@@ -55,7 +55,13 @@
             </div>
           </div>
           <div class="sl-toggle">
-            <i class="material-icons">arrow_drop_down</i>
+            <i class="material-icons">
+              {#if showInfo[ship.Name]}
+              arrow_drop_up
+              {:else}
+              arrow_drop_down
+              {/if}
+            </i>
           </div>
 
           {#if showInfo[ship.Name]}
