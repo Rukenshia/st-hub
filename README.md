@@ -7,7 +7,8 @@ The `StHub` requires a mod to be installed to the game to collect the battle inf
 
 ## Installation
 
-You can download the latest version form the [Releases page](https://github.com/Rukenshia/st-hub/releases). Simply download the `sthub.exe` file and execute it. It is recommended to move it to somewhere to your Desktop in its own folder so you don't accidentally delete files that get generated automatically.
+You can download the latest version form the [Releases page](https://github.com/Rukenshia/st-hub/releases). Simply download the `sthub.exe` file . It is recommended to move it to somewhere to your Desktop in its own folder so you don't accidentally delete files that get generated automatically.
+To run sthub, simply execute the file.
 
 ## Features
 
