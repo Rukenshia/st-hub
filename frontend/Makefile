@@ -2,7 +2,7 @@
 init:
 	npm ci
 
-public/bundle.*: $(shell find src)
+public/bundle.%: $(shell find src)
 	npm run build
 
 .PHONY: deploy
