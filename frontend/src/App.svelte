@@ -19,12 +19,12 @@
 		const res = await fetchIntegration();
 		$iteration = res.data;
 		const resBattles = await fetchBattles();
-		$battles = resBattles.data;
+		$battles = resBattles.data === null ? [] : resBattles.data.reverse();
 		$activeBattle = $battles.find(b => b.Status === 'active');
 
 		setInterval(async () => {
 			const resBattles = await fetchBattles();
-			$battles = resBattles.data;
+			$battles = resBattles.data === null ? [] : resBattles.data.reverse();
 			$activeBattle = $battles.find(b => b.Status === 'active');
 		}, 2500);
 	});
@@ -64,6 +64,12 @@ body {
 header {
 	margin: -8px;
 }
+
+footer {
+	a {
+		color: #cecece;
+	}
+}
 </style>
 
 <AppBar iteration={$iteration} />
@@ -76,6 +82,9 @@ header {
 
 <footer>
 	<div class="mdc-typography--subtitle2" style="text-align: center;">
+		<div>Made with ❤️ by Rukenshia#4396(Discord), Email: <a href="mailto:svc-sthub@ruken.pw">svc-sthub@ruken.pw</a></div>
+		<br />
+		<br />
 		<div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/"                 title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
 	</div>
 </footer>

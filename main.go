@@ -2,11 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"path/filepath"
 	"sthub/lib"
 	"sthub/lib/scraper"
@@ -17,17 +19,11 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	//	"gopkg.in/toast.v1"
+
+	rice "github.com/GeertJohan/go.rice"
 )
 
 func main() {
-	// Initialise the application
-	cfg, err := initApp()
-	if err != nil {
-		dialog.Message("%s", "Could not load configuration.").Title("StHub").Error()
-		os.Exit(1)
-	}
-
 	// Find current test iteration
 	res, err := grequests.Get("https://hv59yay1u3.execute-api.eu-central-1.amazonaws.com/live/iteration/current", nil)
 	if err != nil {
@@ -39,6 +35,13 @@ func main() {
 	if err := res.JSON(currentIteration); err != nil {
 		dialog.Message("%s: %v. %s", "Could not parse current test iteration", err, "Please contact Rukenshia.").Title("StHub: PARSE_CURRENT_ITER").Error()
 		log.Fatalln(err)
+	}
+
+	// Initialise the application
+	cfg, err := initApp(currentIteration)
+	if err != nil {
+		dialog.Message("%s", "Could not load configuration.").Title("StHub").Error()
+		os.Exit(1)
 	}
 
 	testController, err := lib.NewTestController(currentIteration)
@@ -65,9 +68,6 @@ func main() {
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
-	// Frontend
-	e.Static("/frontend", "frontend/public")
-
 	testController.RegisterRoutes(e.Group("/iterations"))
 
 	go func() {
@@ -76,16 +76,16 @@ func main() {
 
 		<-timer.C
 
-		// if err := exec.Command("rundll32", "url.dll,FileProtocolHandler", "http://localhost:1323/frontend/index.html").Start(); err != nil {
-		// 	log.Fatal("Could not open browser")
-		// }
+		if err := exec.Command("rundll32", "url.dll,FileProtocolHandler", "https://sthub.in.fkn.space").Start(); err != nil {
+			log.Fatal("Could not open browser")
+		}
 	}()
 
 	// Start server
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-func initApp() (*Config, error) {
+func initApp(currentIteration *lib.TestIteration) (*Config, error) {
 	// Load local config
 	execDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
@@ -132,7 +132,70 @@ func initApp() (*Config, error) {
 		log.Fatalf("Could not write config: %v", err)
 	}
 
-	// Check if the modification exists
+	if err := checkRequiredFiles(filepath.Join(config.WowsPath, "res_mods", currentIteration.ClientVersion)); err != nil {
+		dialog.Message("%s", "The game modification will now be added to your client. If you have World of Warships running, you will have to restart it.").
+			Title("StHub Setup").
+			Info()
+	}
+
+	// Always install the mod
+	box := rice.MustFindBox("mod")
+
+	if err := os.MkdirAll(filepath.Join(config.WowsPath, "res_mods", currentIteration.ClientVersion, "PnFMods", "StHub", "api"), 0666); err != nil {
+		dialog.Message("%s: %v", "Could not create required directories for the mod", err).
+			Title("StHub Setup").
+			Error()
+		os.Exit(1)
+	}
+
+	pnfModsLoader, err := box.Bytes("PnFModsLoader.py")
+	if err != nil {
+		dialog.Message("%s: %v", "Could not load PnFModsLoader.py", err).
+			Title("StHub Setup").
+			Error()
+		os.Exit(1)
+	}
+	sthubMain, err := box.Bytes("PnFMods/StHub/Main.py")
+	if err != nil {
+		dialog.Message("%s: %v", "Could not load StHub/Main.py", err).
+			Title("StHub Setup").
+			Error()
+		os.Exit(1)
+	}
+
+	if err := ioutil.WriteFile(filepath.Join(config.WowsPath, "res_mods", currentIteration.ClientVersion, "PnFModsLoader.py"), pnfModsLoader, 0666); err != nil {
+		dialog.Message("%s: %v", "Could not write PnFModsLoader.py", err).
+			Title("StHub Setup").
+			Error()
+		os.Exit(1)
+	}
+
+	if err := ioutil.WriteFile(filepath.Join(config.WowsPath, "res_mods", currentIteration.ClientVersion, "PnFMods", "StHub", "Main.py"), sthubMain, 0666); err != nil {
+		dialog.Message("%s: %v", "Could not write StHub/Main.py", err).
+			Title("StHub Setup").
+			Error()
+		os.Exit(1)
+	}
 
 	return &config, nil
+}
+
+func checkRequiredFiles(gamePath string) error {
+	if _, err := os.Stat(filepath.Join(gamePath, "PnFModsLoader.py")); os.IsNotExist(err) {
+		return errors.New("PnFModsLoader.py does not exist")
+	}
+	if _, err := os.Stat(filepath.Join(gamePath, "PnFMods")); os.IsNotExist(err) {
+		return errors.New("PnFMods does not exist")
+	}
+	if _, err := os.Stat(filepath.Join(gamePath, "PnFMods", "StHub")); os.IsNotExist(err) {
+		return errors.New("StHub does not exist")
+	}
+	if _, err := os.Stat(filepath.Join(gamePath, "PnFMods", "StHub", "Main.py")); os.IsNotExist(err) {
+		return errors.New("Main.py does not exist")
+	}
+	if _, err := os.Stat(filepath.Join(gamePath, "PnFMods", "StHub", "api")); os.IsNotExist(err) {
+		return errors.New("api does not exist")
+	}
+
+	return nil
 }

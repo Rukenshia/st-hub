@@ -6,7 +6,7 @@ function gen() {
     id="$(echo "${1}" | jq -r '.[0]')"
     name="$(echo "${1}" | jq -r '.[1]')"
 
-    obj="$(jq -n --arg id "${id}" --arg name "${name}" '{ShipID: ($id | tonumber), ShipName: $name, InDivision: '$2'}')"
+    obj="$(jq -n --arg id "${id}" --arg name "${name}" '{ShipID: ($id | tonumber), InDivision: '$2'}')"
 
     res="$(curl -s -H 'Content-Type: application/json' -X POST --data "${obj}" http://localhost:1323/iterations/current/battles)"
 

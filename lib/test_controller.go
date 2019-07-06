@@ -126,7 +126,6 @@ func (t *TestController) GetBattles(c echo.Context) error {
 
 type StartBattleRequest struct {
 	ShipID     uint64
-	ShipName   string
 	InDivision bool
 }
 
@@ -137,6 +136,7 @@ func (t *TestController) StartBattle(c echo.Context) error {
 	}
 
 	if t.activeBattle != nil {
+		c.Logger().Debug("StartBattle: cannot start because of an active battle")
 		c.String(400, "There is already an active battle")
 		return nil
 	}
@@ -151,13 +151,15 @@ func (t *TestController) StartBattle(c echo.Context) error {
 		return nil
 	}
 
+	ship := t.currentIteration.GetShip(req.ShipID)
+
 	now := time.Now()
 
 	battle := &battle.Battle{
 		ID:        xid.New().String(),
 		StartedAt: &now,
-		Ship:      req.ShipID,
-		ShipName:  req.ShipName,
+		ShipID:    ship.ID,
+		ShipName:  ship.Name,
 		Status:    "active",
 		Statistics: battle.Statistics{
 			InDivision: battle.CorrectableBool{Value: req.InDivision},
@@ -253,6 +255,8 @@ func (t *TestController) UpdateActiveBattle(c echo.Context) error {
 	t.activeBattle.file.Save()
 
 	if req.Status == "finished" {
+		now := time.Now()
+		t.activeBattle.battle.FinishedAt = &now
 		t.activeBattle = nil
 	}
 

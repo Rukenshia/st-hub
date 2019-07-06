@@ -12,4 +12,4 @@ export const iteration = writable({
 
 export const clientId = readable('2ecce5b4b0ffcffc5e7bc04131fb5c8e');
 
-export const darkMode = writable(false);
+export const darkMode = writable(true);

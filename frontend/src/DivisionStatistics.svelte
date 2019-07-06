@@ -7,18 +7,18 @@
   let ships = derived(battles, $battles =>
     Object.values(
       $battles.reduce((p, c) => {
-        if (p[c.Ship]) {
-          p[c.Ship].battles++;
+        if (p[c.ShipID]) {
+          p[c.ShipID].battles++;
 
           if (c.Statistics.InDivision.Value) {
-            p[c.Ship].division++;
+            p[c.ShipID].division++;
           }
 
-          p[c.Ship].rate = Math.round(
-            (p[c.Ship].division / p[c.Ship].battles) * 100
+          p[c.ShipID].rate = Math.round(
+            (p[c.ShipID].division / p[c.ShipID].battles) * 100
           );
         } else {
-          p[c.Ship] = {
+          p[c.ShipID] = {
             name: c.ShipName,
             battles: 1,
             division: c.Statistics.InDivision.Value ? 1 : 0,

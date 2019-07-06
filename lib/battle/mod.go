@@ -8,7 +8,7 @@ type Battle struct {
 	FinishedAt *time.Time
 	StartedAt  *time.Time
 	Status     string
-	Ship       uint64
+	ShipID     uint64
 	ShipName   string
 	Statistics Statistics
 }

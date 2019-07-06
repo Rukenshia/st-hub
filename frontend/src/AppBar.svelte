@@ -9,6 +9,7 @@
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
     const topAppBar = new MDCTopAppBar(topAppBarElement);
     const switchControl = new MDCSwitch(document.querySelector('.mdc-switch'));
+    switchControl.getDefaultFoundation().setChecked($darkMode);
   });
 
   export let iteration = {

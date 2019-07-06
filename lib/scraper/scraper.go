@@ -12,6 +12,7 @@ import (
 	"sthub/lib"
 	"sthub/lib/battle"
 	"strings"
+	"time"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/levigross/grequests"
@@ -44,7 +45,7 @@ func (s *Scraper) Start(clientVersion string) error {
 	}
 
 	go func() {
-		log.Printf("scraper: start in %s", dir)
+		debounce := false
 		for {
 			select {
 			case event, ok := <-watcher.Events:
@@ -52,8 +53,20 @@ func (s *Scraper) Start(clientVersion string) error {
 					return
 				}
 
-				if (event.Op&fsnotify.Write == fsnotify.Write) || (event.Op&fsnotify.Create == fsnotify.Create) {
+				if event.Op&fsnotify.Write == fsnotify.Write {
 					log.Println("scraper: detected change in", event.Name)
+
+					if debounce {
+						continue
+					}
+
+					debounce = true
+					go func() {
+						to := time.NewTimer(50 * time.Millisecond)
+						<-to.C
+
+						debounce = false
+					}()
 
 					if filepath.Base(event.Name) == "battle.start" {
 						data, err := ioutil.ReadFile(event.Name)

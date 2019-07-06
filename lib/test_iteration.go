@@ -47,17 +47,28 @@ func LoadTestIterationFile(iterationName string) (*TestIterationFile, error) {
 	return &t, nil
 }
 
-// LoadOrCreateIterationFile loads or creates an empty iteration file
+// LoadOrCreateIterationFile loads an existing or creates an empty iteration file
+//
+// Due to the nature of Wargaming's ST program, the testships during an iteration can change at
+// any time. To prevent inconsistencies (or forcing a new file while an iteration is still running),
+// the Ships on an existing file will always be overwritten.
 func LoadOrCreateIterationFile(currentIteration *TestIteration) (*TestIterationFile, error) {
 	filename := fmt.Sprintf("sthub-%s-%s.json", currentIteration.ClientVersion, currentIteration.IterationName)
 
+	var ti *TestIterationFile
 	if _, err := os.Stat(filename); err == nil {
-		return LoadTestIterationFile(fmt.Sprintf("%s-%s", currentIteration.ClientVersion, currentIteration.IterationName))
-	}
+		ti, err := LoadTestIterationFile(fmt.Sprintf("%s-%s", currentIteration.ClientVersion, currentIteration.IterationName))
+		if err != nil {
+			return nil, err
+		}
 
-	ti := &TestIterationFile{
-		TestIteration: *currentIteration,
-		filename:      filename,
+		// Always override ships as they can change at any time
+		ti.Ships = currentIteration.Ships
+	} else {
+		ti = &TestIterationFile{
+			TestIteration: *currentIteration,
+			filename:      filename,
+		}
 	}
 
 	data, err := json.Marshal(ti)
@@ -90,4 +101,14 @@ func (t *TestIteration) HasShip(id uint64) bool {
 		}
 	}
 	return false
+}
+
+// GetShip returns info on a ship if it exists
+func (t *TestIteration) GetShip(id uint64) *TestShip {
+	for _, s := range t.Ships {
+		if s.ID == id {
+			return &s
+		}
+	}
+	return nil
 }
