@@ -33,5 +33,5 @@ steps:
     GOARCH: amd64
   commands:
   - go get -u github.com/GeertJohan/go.rice/rice
-  - rice embed-go
+  - ~/go/bin/rice embed-go
   - go build
