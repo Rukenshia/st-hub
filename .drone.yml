@@ -31,6 +31,7 @@ steps:
   environment:
     GOOS: windows
     GOARCH: amd64
+    PATH: $PATH:/go/bin
   commands:
   - go get -u github.com/GeertJohan/go.rice/rice
   - $GOPATH/bin/rice embed-go
