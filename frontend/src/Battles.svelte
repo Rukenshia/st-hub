@@ -53,6 +53,11 @@
             &.loss {
               @include mdc-chip-fill-color(#fedede);
             }
+
+            &.abandoned {
+              @include mdc-chip-fill-color(rgb(252, 185, 65));
+              color: #121212;
+            }
           }
         }
       }
@@ -66,6 +71,11 @@
           &.loss {
             @include mdc-chip-fill-color(#ff574a);
             color: rgba(0, 0, 0, 0.87);
+          }
+
+          &.abandoned {
+            @include mdc-chip-fill-color(rgb(252, 185, 65));
+            color: #121212;
           }
         }
       }
@@ -135,7 +145,7 @@
     {:else}
     {#each $filteredBattles as battle}
       <div
-        class="mdc-card mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
+        class="mdc-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone">
         <div class="mdc-card__primary-action battle-card">
           <div class="battle-card__primary">
             <div class="mdc-layout-grid">
@@ -168,6 +178,10 @@
                             <div class="mdc-chip">
                               <div class="mdc-chip__text">In Battle</div>
                             </div>
+                          {:else if battle.Status === 'abandoned'}
+                            <div class="mdc-chip abandoned">
+                              <div class="mdc-chip__text">Abandoned</div>
+                            </div>
                           {:else}
                             <div
                               class="mdc-chip"
@@ -186,8 +200,6 @@
                       </div>
                     </div>
                   </div>
-
-                  <p>Damage (raw): {battle.Statistics.Damage.Value} </p>
                 </div>
               </div>
             </div>
@@ -195,6 +207,7 @@
           </div>
         </div>
       </div>
+      <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-4-phone"></div>
     {/each}
     {/if}
   </div>

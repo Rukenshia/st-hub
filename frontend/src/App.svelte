@@ -8,6 +8,7 @@
   import { onMount } from 'svelte';
 
   let apiError = false;
+  let version = null;
 
 	const fetchIntegration = () => {
     return axios.get('http://localhost:1323/iterations/current')
@@ -35,8 +36,27 @@
       });
 	};
 
+	const fetchVersion = () => {
+    return axios.get(`http://localhost:1323/version`)
+      .then(r => {
+        apiError = false;
+        return r.data;
+      })
+      .catch(err => {
+        apiError = true;
+
+        return null;
+      });
+	};
+
 	onMount(async () => {
     const tryConnect = async () => {
+      version = await fetchVersion();
+
+      if (apiError) {
+        return false
+      }
+
       const res = await fetchIntegration();
       $iteration = res.data;
 
@@ -123,7 +143,7 @@ footer {
 }
 </style>
 
-<AppBar iteration={$iteration} {apiError} />
+<AppBar iteration={$iteration} {version} {apiError} />
 
 <DivisionStatistics/>
 

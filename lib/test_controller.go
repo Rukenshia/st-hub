@@ -2,7 +2,6 @@ package lib
 
 import (
 	"fmt"
-	"log"
 	"sthub/lib/battle"
 	"time"
 
@@ -48,6 +47,7 @@ func NewTestController(currentIteration *TestIteration) (*TestController, error)
 	}, currentIteration: file, activeBattle: activeBattle}, nil
 }
 
+// getFileFromContext loads or returns the TestIterationFile from the parameters in the request
 func (t *TestController) getFileFromContext(c echo.Context) (*TestIterationFile, error) {
 	iterationName := fmt.Sprintf("%s-%s", c.Param("clientVersion"), c.Param("iteration"))
 	file, ok := t.files[iterationName]
@@ -83,16 +83,19 @@ func (t *TestController) getFileFromContext(c echo.Context) (*TestIterationFile,
 	return file, nil
 }
 
+// RegisterRoutes is used to register routes of the testcontroller to echo
 func (t *TestController) RegisterRoutes(g *echo.Group) {
 	g.GET("/:clientVersion/:iteration", t.GetIteration)
 	g.GET("/:clientVersion/:iteration/battles", t.GetBattles)
 	g.PUT("/:clientVersion/:iteration/battles/:battle", t.UpdateBattle)
 
+	// Called by game modification
 	g.GET("/current", t.GetCurrentIteration)
 	g.POST("/current/battles", t.StartBattle)
 	g.POST("/current/battles/active", t.UpdateActiveBattle)
 }
 
+// GetCurrentIteration returns information about the active iteration
 func (t *TestController) GetCurrentIteration(c echo.Context) error {
 	if t.currentIteration == nil {
 		c.String(404, "No active iteration")
@@ -103,6 +106,7 @@ func (t *TestController) GetCurrentIteration(c echo.Context) error {
 	return nil
 }
 
+// GetIteration returns information on the given iteration
 func (t *TestController) GetIteration(c echo.Context) error {
 	file, err := t.getFileFromContext(c)
 	if err != nil {
@@ -114,6 +118,7 @@ func (t *TestController) GetIteration(c echo.Context) error {
 	return nil
 }
 
+// GetBattles returns a list of battle in the given iteration
 func (t *TestController) GetBattles(c echo.Context) error {
 	file, err := t.getFileFromContext(c)
 	if err != nil {
@@ -124,21 +129,28 @@ func (t *TestController) GetBattles(c echo.Context) error {
 	return nil
 }
 
+// StartBattleRequest represents the body parameters used to start a new active battle
 type StartBattleRequest struct {
 	ShipID     uint64
 	InDivision bool
 }
 
+// StartBattle starts a new active battle, usually called when the game entered a battle and the timer hit 0.
+// Any active battle will be marked as "abandoned" to prevent out-of-sync state with the game modification.
+// Abandoned battles are usually an indicator of the user restarting their client before a game was marked as
+// ended or quit.
 func (t *TestController) StartBattle(c echo.Context) error {
 	if t.currentIteration == nil {
 		c.String(400, "No current iteration")
 		return nil
 	}
+	now := time.Now()
 
 	if t.activeBattle != nil {
-		c.Logger().Debug("StartBattle: cannot start because of an active battle")
-		c.String(400, "There is already an active battle")
-		return nil
+		// Abandon current battle
+		t.activeBattle.battle.FinishedAt = &now
+		t.activeBattle.battle.Status = "abandoned"
+		t.activeBattle = nil
 	}
 
 	req := new(StartBattleRequest)
@@ -147,13 +159,11 @@ func (t *TestController) StartBattle(c echo.Context) error {
 	}
 
 	if !t.currentIteration.HasShip(req.ShipID) {
-		c.String(400, "Ship not part of testing iteration")
+		c.String(400, "ERR_NOT_IN_TESTING")
 		return nil
 	}
 
 	ship := t.currentIteration.GetShip(req.ShipID)
-
-	now := time.Now()
 
 	battle := &battle.Battle{
 		ID:        xid.New().String(),
@@ -178,6 +188,8 @@ func (t *TestController) StartBattle(c echo.Context) error {
 	return nil
 }
 
+// UpdateBattle updates a battle with the given body. Minimal checks are done
+// to prevent updating fields that should not be updated.
 func (t *TestController) UpdateBattle(c echo.Context) error {
 	file, err := t.getFileFromContext(c)
 	if err != nil {
@@ -203,11 +215,13 @@ func (t *TestController) UpdateBattle(c echo.Context) error {
 		return nil
 	}
 
-	log.Printf(">>> %v", req.Statistics.InDivision.Value)
-
 	// Check that unchangeable fields have not changed
-	if req.StartedAt.String() != file.Battles[index].StartedAt.String() {
-		c.String(400, "Can not change battle start time")
+	if req.StartedAt.Format(time.UnixDate) != file.Battles[index].StartedAt.Format(time.UnixDate) {
+		c.String(400, "ERR_CHANGE_START_TIME")
+		return nil
+	}
+	if req.ShipID != file.Battles[index].ShipID || req.ShipName != file.Battles[index].ShipName {
+		c.String(400, "ERR_CHANGE_SHIP")
 		return nil
 	}
 
@@ -216,6 +230,8 @@ func (t *TestController) UpdateBattle(c echo.Context) error {
 	return c.JSON(200, req)
 }
 
+// UpdateActiveBattle updates the active battle with the request body. Minimal checks are done
+// to verify that no static fields are changed.
 func (t *TestController) UpdateActiveBattle(c echo.Context) error {
 	if t.activeBattle == nil {
 		c.String(404, "No active battle")
@@ -234,7 +250,11 @@ func (t *TestController) UpdateActiveBattle(c echo.Context) error {
 
 	// Check that unchangeable fields have not changed
 	if req.StartedAt.Format(time.UnixDate) != t.activeBattle.battle.StartedAt.Format(time.UnixDate) {
-		c.String(400, "Can not change battle start time")
+		c.String(400, "ERR_CHANGE_START_TIME")
+		return nil
+	}
+	if req.ShipID != t.activeBattle.battle.ShipID || req.ShipName != t.activeBattle.battle.ShipName {
+		c.String(400, "ERR_CHANGE_SHIP")
 		return nil
 	}
 
@@ -254,7 +274,7 @@ func (t *TestController) UpdateActiveBattle(c echo.Context) error {
 	*t.activeBattle.battle = *req
 	t.activeBattle.file.Save()
 
-	if req.Status == "finished" {
+	if req.Status != "active" {
 		now := time.Now()
 		t.activeBattle.battle.FinishedAt = &now
 		t.activeBattle = nil

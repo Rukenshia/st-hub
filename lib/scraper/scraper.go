@@ -11,7 +11,6 @@ import (
 	"path/filepath"
 	"sthub/lib"
 	"sthub/lib/battle"
-	"strings"
 	"time"
 
 	"github.com/fsnotify/fsnotify"
@@ -146,8 +145,8 @@ func (s *Scraper) reportBattleStart(data []byte) (*battle.Battle, error) {
 		return nil, err
 	}
 
-	if res.StatusCode == 400 && strings.Contains(res.String(), "Ship not part of testing") {
-		return nil, errors.New("ERR_NOT_IN_TESTING")
+	if res.StatusCode != 200 {
+		return nil, errors.New(res.String())
 	}
 
 	battle := new(battle.Battle)

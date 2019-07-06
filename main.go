@@ -62,13 +62,16 @@ func main() {
 
 	// Middleware
 	e.Use(middleware.Recover())
-	e.Use(middleware.Logger())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:5000", "http://100.115.92.205:5000", "https://sthub.in.fkn.space"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 
 	testController.RegisterRoutes(e.Group("/iterations"))
+	e.GET("/version", func(c echo.Context) error {
+		c.String(200, "0.1.0")
+		return nil
+	})
 
 	go func() {
 		// Wait and open the browser

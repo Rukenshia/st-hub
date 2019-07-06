@@ -1,5 +1,5 @@
 kind: pipeline
-name: default
+name: frontend
 
 steps:
 - name: build
@@ -20,3 +20,19 @@ steps:
     source: frontend/public
     target: /
     cloudfront_distribution: E2OHW6JPREC4E4
+
+---
+kind: pipeline
+name: sthub
+
+platform:
+  os: windows
+  arch: amd64
+
+steps:
+- name: build
+  image: golang
+  commands:
+  - go get -u github.com/GeertJohan/go.rice/rice
+  - rice embed-go
+  - go build

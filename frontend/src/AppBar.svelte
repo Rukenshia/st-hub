@@ -17,6 +17,8 @@
     IterationName: 'loading',
   };
 
+  export let version = null;
+
   export let apiError = false;
 </script>
 
@@ -47,6 +49,10 @@ header.mdc-top-app-bar {
     --mdc-theme-primary: #B00020;
   }
 }
+
+code {
+  font-size: 1.375rem;
+}
 </style>
 
 <header class="mdc-top-app-bar header" class:is-error={apiError}>
@@ -59,6 +65,7 @@ header.mdc-top-app-bar {
         {:else}
           <span>Client version: <strong>{iteration.ClientVersion}</strong></span>
           <span>Iteration: <strong>{iteration.IterationName}</strong></span>
+          <span><code>sthub</code> version: <strong>{version}</strong></span>
         {/if}
       </section>
       <div class="toggle mdc-switch" class:mdc-switch--checked={$darkMode}>
