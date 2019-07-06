@@ -8,3 +8,15 @@ steps:
   - cd frontend
   - npm ci
   - make build
+- name: sync
+  image: plugins/s3-sync:1
+  settings:
+    bucket: sthub.in.fkn.space
+    access_key:
+      from_secret: AWS_ACCESS_KEY_ID
+    secret_key:
+      from_secret: AWS_SECRET_ACCESS_KEY
+    region: eu-central-1
+    source: frontend/public
+    target: /
+    cloudfront_distribution: E2OHW6JPREC4E4
