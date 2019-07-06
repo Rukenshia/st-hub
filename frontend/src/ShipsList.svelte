@@ -34,9 +34,20 @@
   transform: translateY(50%);
   position: absolute;
 }
+
+.sl-header {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
 </style>
 
-<h2 class="mdc-typography--headline4">Ships in this test iteration</h2>
+<div class="mdc-layout-grid sl-header">
+  <div class="mdc-layout-grid__inner">
+    <div class="mdc-layout-grid__cell">
+      <h2 class="mdc-typography--headline4">Ships in this test iteration</h2>
+    </div>
+  </div>
+</div>
 
 <div class="mdc-layout-grid">
   <div class="mdc-layout-grid__inner">

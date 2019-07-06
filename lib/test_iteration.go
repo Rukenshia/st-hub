@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"os"
 	"sthub/lib/battle"
 )
@@ -64,6 +65,8 @@ func LoadOrCreateIterationFile(currentIteration *TestIteration) (*TestIterationF
 
 		// Always override ships as they can change at any time
 		ti.Ships = currentIteration.Ships
+
+		log.Printf("%v", ti)
 	} else {
 		ti = &TestIterationFile{
 			TestIteration: *currentIteration,

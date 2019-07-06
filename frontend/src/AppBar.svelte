@@ -16,6 +16,8 @@
     ClientVersion: 'loading',
     IterationName: 'loading',
   };
+
+  export let apiError = false;
 </script>
 
 <style lang="scss">
@@ -40,16 +42,24 @@ header.mdc-top-app-bar {
   label {
     margin-left: 12px;
   }
+
+  &.is-error {
+    --mdc-theme-primary: #B00020;
+  }
 }
 </style>
 
-<header class="mdc-top-app-bar header">
+<header class="mdc-top-app-bar header" class:is-error={apiError}>
   <div class="mdc-top-app-bar__row">
     <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
       <span class="mdc-top-app-bar__title">StHub</span>
       <section class="mdc-top-app-bar__section">
-        <span>Client version: <strong>{iteration.ClientVersion}</strong></span>
-        <span>Iteration: <strong>{iteration.IterationName}</strong></span>
+        {#if apiError}
+          <span><strong>Unable to connect to the API. Are you running sthub locally?</strong></span>
+        {:else}
+          <span>Client version: <strong>{iteration.ClientVersion}</strong></span>
+          <span>Iteration: <strong>{iteration.IterationName}</strong></span>
+        {/if}
       </section>
       <div class="toggle mdc-switch" class:mdc-switch--checked={$darkMode}>
         <div class="mdc-switch__track"></div>

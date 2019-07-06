@@ -5,28 +5,75 @@
 	import AppBar from './AppBar.svelte';
 	import Battles from './Battles.svelte';
 	import axios from 'axios';
-	import { onMount } from 'svelte';
+  import { onMount } from 'svelte';
+
+  let apiError = false;
 
 	const fetchIntegration = () => {
-		return axios.get('http://localhost:1323/iterations/current');
+    return axios.get('http://localhost:1323/iterations/current')
+      .then(r => {
+        apiError = false;
+        return r;
+      })
+      .catch(err => {
+        apiError = true;
+
+        return { data: { ClientVersion: 'n/a', IterationName: 'n/a', Ships: [] }};
+      });
 	};
 
 	const fetchBattles = () => {
-		return axios.get(`http://localhost:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`);
+    return axios.get(`http://localhost:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`)
+      .then(r => {
+        apiError = false;
+        return r;
+      })
+      .catch(err => {
+        apiError = true;
+
+        return { data: [] };
+      });
 	};
 
 	onMount(async () => {
-		const res = await fetchIntegration();
-		$iteration = res.data;
-		const resBattles = await fetchBattles();
-		$battles = resBattles.data === null ? [] : resBattles.data.reverse();
-		$activeBattle = $battles.find(b => b.Status === 'active');
+    const tryConnect = async () => {
+      const res = await fetchIntegration();
+      $iteration = res.data;
 
-		setInterval(async () => {
-			const resBattles = await fetchBattles();
-			$battles = resBattles.data === null ? [] : resBattles.data.reverse();
-			$activeBattle = $battles.find(b => b.Status === 'active');
-		}, 2500);
+      if (apiError) {
+        return false;
+      }
+
+      const resBattles = await fetchBattles();
+      $battles = resBattles.data === null ? [] : resBattles.data.reverse();
+      $activeBattle = $battles.find(b => b.Status === 'active');
+
+      if (apiError) {
+        return false;
+      }
+
+      setInterval(async () => {
+        const resBattles = await fetchBattles();
+        $battles = resBattles.data === null ? [] : resBattles.data.reverse();
+        $activeBattle = $battles.find(b => b.Status === 'active');
+      }, 2500);
+
+      return true;
+    };
+
+    if (!await tryConnect()) {
+      const loop = () => {
+        setTimeout(async () => {
+          if (!await tryConnect()) {
+            loop();
+          }
+        }, 2000);
+      };
+
+      loop();
+    }
+
+
 	});
 
 	darkMode.subscribe(v => {
@@ -76,7 +123,7 @@ footer {
 }
 </style>
 
-<AppBar iteration={$iteration} />
+<AppBar iteration={$iteration} {apiError} />
 
 <DivisionStatistics/>
 
