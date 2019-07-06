@@ -24,22 +24,22 @@
 
 <div>
   <div class="mdc-text-field stat-text-field">
-    <input type="text" id="averageDamage" class="mdc-text-field__input" disabled value={averageDamage ? averageDamage : ''}>
+    <input type="text" id="averageDamage" class="mdc-text-field__input" disabled value={averageDamage ? averageDamage : 'n/a'}>
     <label class="mdc-floating-label" for="averageDamage">Average Damage</label>
     <div class="mdc-line-ripple"></div>
   </div>
   <div class="mdc-text-field stat-text-field">
-    <input type="text" id="averageKills" class="mdc-text-field__input" disabled value={averageKills ? averageKills : ''}>
+    <input type="text" id="averageKills" class="mdc-text-field__input" disabled value={averageKills ? averageKills : 'n/a'}>
     <label class="mdc-floating-label" for="averageKills">Average Kills</label>
     <div class="mdc-line-ripple"></div>
   </div>
   <div class="mdc-text-field stat-text-field">
-    <input type="text" id="survivalRate" class="mdc-text-field__input" disabled value={survivalRate ? (survivalRate + '%') : ''}>
+    <input type="text" id="survivalRate" class="mdc-text-field__input" disabled value={survivalRate ? (survivalRate + '%') : 'n/a'}>
     <label class="mdc-floating-label" for="survivalRate">Survival Rate</label>
     <div class="mdc-line-ripple"></div>
   </div>
   <div class="mdc-text-field stat-text-field">
-    <input type="text" id="winRate" class="mdc-text-field__input" disabled value={winRate ? (winRate + '%') : ''}>
+    <input type="text" id="winRate" class="mdc-text-field__input" disabled value={winRate ? (winRate + '%') : 'n/a'}>
     <label class="mdc-floating-label" for="winRate">Win Rate</label>
     <div class="mdc-line-ripple"></div>
   </div>
