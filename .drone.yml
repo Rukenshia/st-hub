@@ -34,3 +34,14 @@ steps:
   - go get github.com/GeertJohan/go.rice/rice
   - rice embed-go
   - GOOS=windows GOARCH=amd64 go build
+- name: publish
+  image: plugins/github-release
+  settings:
+    api_key:
+      from_secret: GITHUB_DEPLOY_KEY
+    files:
+      - sthub.exe
+    checksum:
+      - md5
+  when:
+    event: tag
