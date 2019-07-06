@@ -23,6 +23,9 @@ import (
 	rice "github.com/GeertJohan/go.rice"
 )
 
+// The current version of StHub
+const VERSION = "0.1.1"
+
 func main() {
 	// Find current test iteration
 	res, err := grequests.Get("https://hv59yay1u3.execute-api.eu-central-1.amazonaws.com/live/iteration/current", nil)
@@ -69,7 +72,7 @@ func main() {
 
 	testController.RegisterRoutes(e.Group("/iterations"))
 	e.GET("/version", func(c echo.Context) error {
-		c.String(200, "0.1.0")
+		c.String(200, VERSION)
 		return nil
 	})
 
@@ -85,7 +88,7 @@ func main() {
 	}()
 
 	// Start server
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start("localhost:1323"))
 }
 
 func initApp(currentIteration *lib.TestIteration) (*Config, error) {
