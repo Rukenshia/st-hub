@@ -23,8 +23,8 @@ import (
 	rice "github.com/GeertJohan/go.rice"
 )
 
-// The current version of StHub
-const VERSION = "0.1.1"
+// VERSION represents the current version of StHub (this component)
+const VERSION = "0.1.2"
 
 func main() {
 	// Find current test iteration

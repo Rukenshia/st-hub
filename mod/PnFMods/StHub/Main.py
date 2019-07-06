@@ -60,10 +60,14 @@ class StHub:
 
             battle = utils.jsonDecode(data)
 
-            battle['Status'] = 'finished'
+            battle['Status'] = 'abandoned'
             battle['Statistics']['Survived'] = True if self.alive == 1 else False
             battle['Statistics']['Damage']['Value'] = self.battle_damage
             battle['Statistics']['Kills']['Value'] = self.kills
+
+            if battle['Statistics']['InDivision']['Value'] == False and self.in_division:
+                ## Joined division mid-game (probably)
+                battle['Statistics']['InDivision']['Value'] = self.in_division
 
             with open('api/battle.end', 'w') as wf:
                 wf.write(utils.jsonEncode(battle))
@@ -86,6 +90,10 @@ class StHub:
             battle['Statistics']['Survived'] = True if self.alive == 1 else False
             battle['Statistics']['Damage']['Value'] = self.battle_damage
             battle['Statistics']['Kills']['Value'] = self.kills
+
+            if battle['Statistics']['InDivision']['Value'] == False and self.in_division:
+                ## Joined division mid-game (probably)
+                battle['Statistics']['InDivision']['Value'] = self.in_division
 
             with open('api/battle.end', 'w') as wf:
                 wf.write(utils.jsonEncode(battle))

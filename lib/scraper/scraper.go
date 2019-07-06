@@ -58,10 +58,11 @@ func (s *Scraper) Start(clientVersion string) error {
 					if debounce {
 						continue
 					}
+					log.Println("scraper: passing change, not debounced")
 
 					debounce = true
 					go func() {
-						to := time.NewTimer(50 * time.Millisecond)
+						to := time.NewTimer(500 * time.Millisecond)
 						<-to.C
 
 						debounce = false
