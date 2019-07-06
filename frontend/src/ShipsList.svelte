@@ -43,7 +43,7 @@
 
 <div class="mdc-layout-grid sl-header">
   <div class="mdc-layout-grid__inner">
-    <div class="mdc-layout-grid__cell">
+    <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
       <h2 class="mdc-typography--headline4">Ships in this test iteration</h2>
     </div>
   </div>
