@@ -5,6 +5,10 @@
 The supertest hub, `StHub`, is a tool that allows members of the World of Warships super test program to track their statistics of testships, as they do not appear in official statistics.
 The `StHub` requires a mod to be installed to the game to collect the battle information.
 
+## Installation
+
+You can download the latest version form the [Releases page](https://github.com/Rukenshia/st-hub/releases). Simply download the `sthub.exe` file and execute it. It is recommended to move it to somewhere to your Desktop in its own folder so you don't accidentally delete files that get generated automatically.
+
 ## Features
 
 ![Overview of the Frontend](docs/overview.png)
