@@ -1,6 +1,7 @@
 <script>
 	import { battles, iteration, darkMode, activeBattle } from './stores';
-	import DivisionStatistics from './DivisionStatistics.svelte';
+  import DivisionStatistics from './DivisionStatistics.svelte';
+  import VersionNotice from './VersionNotice.svelte';
 	import ShipsList from './ShipsList.svelte';
 	import AppBar from './AppBar.svelte';
 	import Battles from './Battles.svelte';
@@ -9,6 +10,8 @@
 
   let apiError = false;
   let version = null;
+
+  const availableVersion = '0.1.1';
 
 	const fetchIntegration = () => {
     return axios.get('http://localhost:1323/iterations/current')
@@ -144,6 +147,10 @@ footer {
 </style>
 
 <AppBar iteration={$iteration} {version} {apiError} />
+
+{#if version && version !== availableVersion}
+<VersionNotice {availableVersion} {version} />
+{/if}
 
 <DivisionStatistics/>
 
