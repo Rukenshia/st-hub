@@ -45,7 +45,7 @@ body {
 	@include mdc-typography-base();
 	width: 100%;
 
-	
+
 	&.dark {
 		color: #cecece;
 		background-color: #121212;
@@ -57,7 +57,11 @@ body {
 		svg {
 			stroke: #cecece;
 			fill: #cecece;
-		}
+    }
+
+    .mdc-text-field input:disabled {
+      color: #cecece;
+    }
 	}
 }
 

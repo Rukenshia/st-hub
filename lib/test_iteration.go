@@ -57,7 +57,7 @@ func LoadOrCreateIterationFile(currentIteration *TestIteration) (*TestIterationF
 
 	var ti *TestIterationFile
 	if _, err := os.Stat(filename); err == nil {
-		ti, err := LoadTestIterationFile(fmt.Sprintf("%s-%s", currentIteration.ClientVersion, currentIteration.IterationName))
+		ti, err = LoadTestIterationFile(fmt.Sprintf("%s-%s", currentIteration.ClientVersion, currentIteration.IterationName))
 		if err != nil {
 			return nil, err
 		}

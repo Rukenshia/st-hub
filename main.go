@@ -64,7 +64,7 @@ func main() {
 	e.Use(middleware.Recover())
 	e.Use(middleware.Logger())
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"http://localhost:5000", "http://100.115.92.205:5000"},
+		AllowOrigins: []string{"http://localhost:5000", "http://100.115.92.205:5000", "https://sthub.in.fkn.space"},
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete},
 	}))
 

@@ -64,7 +64,7 @@
           </div>
 
           {#if showInfo[ship.Name]}
-            <ShipStatistics ship={ship.Name} battles={$battles.filter(b => b.Ship === ship.ID)} />
+            <ShipStatistics ship={ship.Name} battles={$battles.filter(b => b.ShipID === ship.ID)} />
           {/if}
         </div>
       </div>
