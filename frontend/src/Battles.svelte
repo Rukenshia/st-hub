@@ -49,7 +49,7 @@ body {
         }
     }
 
-    &.dark {      
+    &.dark {
         .battle-card .battle-card__primary .mdc-chip-set {
             .mdc-chip {
                 @include mdc-chip-fill-color(lighten(#121212, 11%));
@@ -65,7 +65,7 @@ body {
             @include mdc-select-container-fill-color(lighten(#121212, 5%));
             @include mdc-select-focused-label-color(lighten(rgba(98,0,238,0.87), 25%));
             @include mdc-select-focused-bottom-line-color(lighten(rgba(98,0,238,0.87), 25%));
-            
+
             .mdc-floating-label, .mdc-select__native-control {
                 color: #cecece;
 
@@ -152,11 +152,11 @@ select {
                             <p>
                                 Damage (raw): {battle.Statistics.Damage.Value}
                             </p>
-                            </div> 
+                            </div>
                         </div>
                     </div>
-                    
-                    
+
+
                 </div>
             </div>
         </div>
