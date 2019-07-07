@@ -42,5 +42,6 @@ steps:
       - sthub.exe
     checksum:
       - md5
+    draft: true
   when:
     event: tag
