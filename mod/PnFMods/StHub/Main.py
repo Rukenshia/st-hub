@@ -3,6 +3,7 @@ MOD_NAME = 'StHub'
 
 devmenu.enable()
 
+
 class StHub:
     def __init__(self):
         self.battle_timestamp = None
@@ -35,17 +36,17 @@ class StHub:
                 self.alive = False
 
     def battle_start(self):
-        self.battle_timestamp = utils.timeNowUTC().strftime("%s")
+        self.battle_timestamp = utils.timeNowUTC().strftime("%Y%m%d%H%M%S")
 
         selfInfo = battle.getSelfPlayerInfo()
         data = {
             'Status': 'active',
-            'Timestamp': self.battle_timestamp
+            'Timestamp': self.battle_timestamp,
             'ShipID': selfInfo.shipInfo.id,
             'InDivision': self.in_division,
         }
 
-        with open('api/battle.%s'%(self.battle_timestamp), 'w') as f:
+        with open('api/battle.%s' % (self.battle_timestamp), 'w') as f:
             f.write(utils.jsonEncode(data))
 
         self.battle_damage = 0
@@ -57,39 +58,40 @@ class StHub:
     def battle_quit(self, _m):
         if self.sent_battle_end:
             return
-           
+
         data = {
             'Status': 'abandoned',
-            'Timestamp': self.start_data['Timestamp']
-            'ShipID': self.start_data['ShipID']
+            'Timestamp': self.start_data['Timestamp'],
+            'ShipID': self.start_data['ShipID'],
             'InDivision': self.start_data['InDivision'],
             'Survived': True if self.alive == 1 else False,
             'Damage': self.battle_damage,
         }
 
-        if self.start_data['InDivision'] == false and self.in_division:
+        if self.start_data['InDivision'] == False and self.in_division:
             data['InDivision'] = self.in_division
 
-        with open('api/battle.%s'%(self.battle_timestamp), 'w') as f:
-            f.write(utils.jsonEncode(battle))
+        with open('api/battle.%s' % (self.battle_timestamp), 'w') as f:
+            f.write(utils.jsonEncode(data))
 
     def battle_end(self, winLoss, _unknown):
         self.sent_battle_end = True
 
         data = {
             'Status': 'finished',
-            'Timestamp': self.start_data['Timestamp']
-            'ShipID': self.start_data['ShipID']
+            'Timestamp': self.start_data['Timestamp'],
+            'ShipID': self.start_data['ShipID'],
             'InDivision': self.start_data['InDivision'],
             'Survived': True if self.alive == 1 else False,
-            'Win': winLoss,
+            'Win': True if winLoss == 1 else False,
             'Damage': self.battle_damage,
         }
 
-        if self.start_data['InDivision'] == false and self.in_division:
+        if self.start_data['InDivision'] == False and self.in_division:
             data['InDivision'] = self.in_division
 
-        with open('api/battle.%s'%(self.battle_timestamp), 'w') as f:
-            f.write(utils.jsonEncode(battle))
+        with open('api/battle.%s' % (self.battle_timestamp), 'w') as f:
+            f.write(utils.jsonEncode(data))
+
 
 StHub()

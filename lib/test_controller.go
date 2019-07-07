@@ -2,6 +2,7 @@ package lib
 
 import (
 	"fmt"
+	"log"
 	"sthub/lib/battle"
 	"time"
 
@@ -133,6 +134,7 @@ func (t *TestController) GetBattles(c echo.Context) error {
 type StartBattleRequest struct {
 	ShipID     uint64
 	InDivision bool
+	Timestamp  string
 }
 
 // StartBattle starts a new active battle, usually called when the game entered a battle and the timer hit 0.
@@ -171,6 +173,7 @@ func (t *TestController) StartBattle(c echo.Context) error {
 		ShipID:    ship.ID,
 		ShipName:  ship.Name,
 		Status:    "active",
+		Timestamp: req.Timestamp,
 		Statistics: battle.Statistics{
 			InDivision: battle.CorrectableBool{Value: req.InDivision},
 		},
@@ -275,10 +278,19 @@ func (t *TestController) UpdateActiveBattle(c echo.Context) error {
 	t.activeBattle.file.Save()
 
 	if req.Status != "active" {
+		log.Printf("removing active battle")
 		now := time.Now()
 		t.activeBattle.battle.FinishedAt = &now
 		t.activeBattle = nil
 	}
 
 	return c.JSON(200, req)
+}
+
+// GetActiveBattle returns the current active battle
+func (t *TestController) GetActiveBattle() *battle.Battle {
+	if t.activeBattle == nil {
+		return nil
+	}
+	return t.activeBattle.battle
 }
