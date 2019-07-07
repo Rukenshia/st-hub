@@ -55,6 +55,11 @@ func (s *Scraper) Start(clientVersion string) error {
 				if event.Op&fsnotify.Write == fsnotify.Write {
 					log.Println("scraper: detected change in", event.Name)
 
+					if !strings.Contains(filepath.Base(event.Name), "battle.") {
+						log.Printf("skipping unknown file")
+						continue
+					}
+
 					if debounce {
 						continue
 					}
@@ -68,55 +73,25 @@ func (s *Scraper) Start(clientVersion string) error {
 						debounce = false
 					}()
 
-					if filepath.Base(event.Name) == "battle.start" {
-						data, err := ioutil.ReadFile(event.Name)
-						if err != nil {
-							log.Println(err)
-							dialog.Message("Could not read battle start file. Please contact Rukenshia. The program will exit now.").Title("StHub: ERR_BATTLE_FLOW_READ_START").Error()
-							os.Exit(1)
-						}
-
-						res, err := s.reportBattleStart(data)
-						if err != nil {
-							if err.Error() == "ERR_NOT_IN_TESTING" {
-								if err := ioutil.WriteFile(filepath.Join(filepath.Dir(event.Name), "battle.response"), []byte("ERR_NOT_IN_TESTING"), 0666); err != nil {
-									log.Println(err)
-									dialog.Message("Could not send battle start request. Please contact Rukenshia").Title("StHub: ERR_BATTLE_FLOW_START_FAIL_WRITE").Error()
-									continue
-								}
-								continue
-							} else {
-								log.Println(err)
-								dialog.Message("Could not send battle start request. Please contact Rukenshia").Title("StHub: ERR_BATTLE_FLOW_START_SEND").Error()
-								continue
-							}
-						}
-
-						// Write battle result
-						data, err = json.Marshal(res)
-						if err != nil {
-							log.Println(err)
-							dialog.Message("Could not marshal data. Please contact Rukenshia").Title("StHub: ERR_BATTLE_FLOW_START_MARSHAL").Error()
-							continue
-						}
-
-						if err := ioutil.WriteFile(filepath.Join(filepath.Dir(event.Name), "battle.response"), data, 0666); err != nil {
-							log.Println(err)
-							dialog.Message("Could not send battle start request. Please contact Rukenshia").Title("StHub: ERR_BATTLE_FLOW_START_WRITE").Error()
-							continue
-						}
-					} else if filepath.Base(event.Name) == "battle.end" {
-						data, err := ioutil.ReadFile(event.Name)
-						if err != nil {
-							log.Println(err)
-							dialog.Message("Could not read battle end file. Please contact Rukenshia. The program will exit now.").Title("StHub: ERR_BATTLE_FLOW_READ_END").Error()
-							os.Exit(1)
-						}
-
-						s.reportBattleEnd(data)
-					} else {
-						log.Println("scraper: untracked file changed")
+					data, err := ioutil.ReadFile(event.Name)
+					if err != nil {
+						log.Println(err)
+						dialog.Message("Could not read battle file. Please contact Rukenshia. The program will exit now.").Title("StHub: ERR_BATTLE_FLOW_READ").Error()
+						os.Exit(1)
 					}
+
+					info := new(ModBattleInfo)
+					if err := json.Unmarshal(data, info); err != nil {
+						log.Println(err)
+						dialog.Message("Could not parse battle file. Please contact Rukenshia. The program will exit now.").Title("StHub: ERR_BATTLE_FLOW_PARSE").Error()
+						os.Exit(1)
+					}
+
+					// Decide what to send
+					// Send to API
+					// Handle NOT_IN_TESTING for battle end (store rejected timestamps, clear on end?)
+					// Handle active battle errors?
+					// Walk fs on startup
 				}
 			case err, ok := <-watcher.Errors:
 				if !ok {
