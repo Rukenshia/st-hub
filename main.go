@@ -24,7 +24,7 @@ import (
 )
 
 // VERSION represents the current version of StHub (this component)
-const VERSION = "0.1.2"
+const VERSION = "0.2.0"
 
 func main() {
 	// Find current test iteration
@@ -50,13 +50,6 @@ func main() {
 	testController, err := lib.NewTestController(currentIteration)
 	if err != nil {
 		dialog.Message("%s: %v. %s", "Could not create API Controller", err, "Please contact Rukenshia.").Title("StHub: LC_CURRENT_ITER").Error()
-		log.Fatalln(err)
-	}
-
-	scraper := scraper.New(cfg.WowsPath, testController)
-
-	if err := scraper.Start(currentIteration.ClientVersion); err != nil {
-		dialog.Message("%s: %v", "Could not start waiting for info", err).Title("StHub: ERR_SCRAPER_START").Error()
 		log.Fatalln(err)
 	}
 
@@ -88,7 +81,20 @@ func main() {
 	}()
 
 	// Start server
-	e.Logger.Fatal(e.Start("localhost:1323"))
+	done := make(chan bool)
+	go func() {
+		e.Logger.Fatal(e.Start("localhost:1323"))
+		done <- true
+	}()
+
+	scraper := scraper.New(cfg.WowsPath, testController)
+
+	if err := scraper.Start(currentIteration.ClientVersion); err != nil {
+		dialog.Message("%s: %v", "Could not start waiting for info", err).Title("StHub: ERR_SCRAPER_START").Error()
+		log.Fatalln(err)
+	}
+
+	<-done
 }
 
 func initApp(currentIteration *lib.TestIteration) (*Config, error) {

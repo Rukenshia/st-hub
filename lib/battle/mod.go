@@ -7,6 +7,7 @@ type Battle struct {
 	ID         string // xid of the battle
 	FinishedAt *time.Time
 	StartedAt  *time.Time
+	Timestamp  string // Timestamp from the game mod
 	Status     string
 	ShipID     uint64
 	ShipName   string
