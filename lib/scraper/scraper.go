@@ -113,6 +113,11 @@ func (s *Scraper) Start(clientVersion string) error {
 						if _, ok := s.rejectedBattles[info.Timestamp]; ok {
 							log.Printf("scraper: ignoring previously rejected battle %s", info.Timestamp)
 							delete(s.rejectedBattles, info.Timestamp)
+
+							if err := os.Remove(event.Name); err != nil {
+								log.Printf("scraper: could not remove file: %v", err)
+								dialog.Message("Could not remove a rejected battle file. Please contact Rukenshia").Title("StHub: ERR_BATTLE_FLOW_REPORT_REJECTED_RM").Error()
+							}
 							continue
 						}
 						ab := s.c.GetActiveBattle()
