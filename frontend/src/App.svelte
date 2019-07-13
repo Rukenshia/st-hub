@@ -132,6 +132,10 @@ body {
     .mdc-text-field input:disabled {
       color: #cecece;
     }
+
+    #field-helper-text {
+      color: #cecece;
+    }
 	}
 }
 

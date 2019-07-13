@@ -3,7 +3,7 @@
   import { derived, writable } from 'svelte/store';
   import { battles } from './stores';
   import { MDCSelect } from '@material/select';
-  import Swords from './svg/swords.svelte';
+  import Battle from './Battle.svelte';
 
   const shipNames = derived(battles, $battles => [
     ...new Set($battles.map(b => b.ShipName))
@@ -144,69 +144,7 @@
     </div>
     {:else}
     {#each $filteredBattles as battle}
-      <div
-        class="mdc-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone">
-        <div class="mdc-card__primary-action battle-card">
-          <div class="battle-card__primary">
-            <div class="mdc-layout-grid">
-              <div class="mdc-layout-grid__inner">
-                <div
-                  class="mdc-layout-grid__cell
-                  mdc-layout-grid__cell--span-1-desktop
-                  mdc-layout-grid__cell--span-1-tablet
-                  mdc-layout-grid__cell--span-2-phone">
-                  {#if battle.Status === 'active'}
-                    <Swords />
-                  {/if}
-                </div>
-                <div
-                  class="mdc-layout-grid__cell
-                  mdc-layout-grid__cell--span-11-desktop
-                  mdc-layout-grid__cell--span-7-tablet
-                  mdc-layout-grid__cell--span-2-phone">
-                  <div class="mdc-layout-grid">
-                    <div class="mdc-layout-grid__inner">
-                      <div class="mdc-layout-grid__cell">
-                        <h2
-                          class="battle-card__title mdc-typography--headline5">
-                           {battle.ShipName}
-                        </h2>
-                      </div>
-                      <div class="mdc-layout-grid__cell">
-                        <div class="mdc-chip-set">
-                          {#if battle.Status === 'active'}
-                            <div class="mdc-chip">
-                              <div class="mdc-chip__text">In Battle</div>
-                            </div>
-                          {:else if battle.Status === 'abandoned'}
-                            <div class="mdc-chip abandoned">
-                              <div class="mdc-chip__text">Abandoned</div>
-                            </div>
-                          {:else}
-                            <div
-                              class="mdc-chip"
-                              class:loss={!battle.Statistics.Win}>
-                              <div class="mdc-chip__text">
-                                {battle.Statistics.Win ? 'Win' : 'Loss'}
-                              </div>
-                            </div>
-                            {#if battle.Statistics.InDivision.Value}
-                              <div class="mdc-chip">
-                                <div class="mdc-chip__text">Division</div>
-                              </div>
-                            {/if}
-                          {/if}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
+      <Battle {battle} />
       <div class="mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-2-tablet mdc-layout-grid__cell--span-4-phone"></div>
     {/each}
     {/if}
