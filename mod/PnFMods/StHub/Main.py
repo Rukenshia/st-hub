@@ -65,6 +65,7 @@ class StHub:
             'ShipID': self.start_data['ShipID'],
             'InDivision': self.start_data['InDivision'],
             'Survived': True if self.alive == 1 else False,
+            'Kills': self.kills,
             'Damage': self.battle_damage,
         }
 
@@ -84,6 +85,7 @@ class StHub:
             'InDivision': self.start_data['InDivision'],
             'Survived': True if self.alive == 1 else False,
             'Win': True if winLoss == 1 else False,
+            'Kills': self.kills,
             'Damage': self.battle_damage,
         }
 
