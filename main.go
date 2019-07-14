@@ -24,7 +24,7 @@ import (
 )
 
 // VERSION represents the current version of StHub (this component)
-const VERSION = "0.2.2"
+const VERSION = "0.2.3"
 
 func main() {
 	// Find current test iteration

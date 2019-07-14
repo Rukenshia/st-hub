@@ -127,7 +127,7 @@ func (s *Scraper) Start(clientVersion string) error {
 						}
 
 						if ab.Timestamp != info.Timestamp {
-							log.Printf("scraper: battle end is for timestamp %s, but active battle is %s. ignoring battle", info.Timestamp, ab.Timestamp)
+							log.Printf("scraper: battle end is for timestamp %s, but active battle is %s", info.Timestamp, ab.Timestamp)
 							dialog.Message("It seems like there are multiple active battles, please contact Rukenshia to fix this bug").Title("StHub: ERR_BATTLE_FLOW_TIMESTAMP_MISMATCH").Error()
 							continue
 						}
@@ -197,6 +197,10 @@ func (s *Scraper) loadCurrentFiles(dir string) error {
 		if info.IsBattleStart() {
 			ab := s.c.GetActiveBattle()
 			if ab != nil && ab.Timestamp == info.Timestamp {
+				if err := os.Remove(path); err != nil {
+					log.Printf("scraper: could not file: %v", err)
+					dialog.Message("Could not remove a non-testship file. Please contact Rukenshia").Title("StHub: ERR_SCRAPER_LOAD_START_RM_ALREADY_ACTIVE").Error()
+				}
 				return nil
 			}
 
@@ -209,6 +213,10 @@ func (s *Scraper) loadCurrentFiles(dir string) error {
 				}
 				log.Printf("scraper: Error reporting battle: %v", err)
 				return err
+			}
+			if err := os.Remove(path); err != nil {
+				log.Printf("scraper: could not remove start file: %v", err)
+				dialog.Message("Could not remove a start battle file. Please contact Rukenshia").Title("StHub: ERR_SCRAPER_LOAD_START_RM").Error()
 			}
 		} else if info.IsBattleEnd() || info.IsBattleQuit() {
 			if _, ok := s.rejectedBattles[info.Timestamp]; ok {
@@ -238,8 +246,32 @@ func (s *Scraper) loadCurrentFiles(dir string) error {
 			}
 
 			if ab.Timestamp != info.Timestamp {
-				log.Printf("scraper: battle end is for timestamp %s, but active battle is %s. ignoring battle", info.Timestamp, ab.Timestamp)
-				dialog.Message("It seems like there are multiple active battles, please contact Rukenshia to fix this bug").Title("StHub: ERR_SCRAPER_LOAD_TIMESTAMP_MISMATCH").Error()
+				if ab.Timestamp < info.Timestamp {
+					log.Printf("the current active battle (id %s, ts %s) is older than the loaded file %s. force abandoning current active battle", ab.ID, ab.Timestamp, info.Timestamp)
+
+					if err := s.abandonActiveBattle(ab); err != nil {
+						log.Printf("scraper: could not abandon active battle: %v", err)
+						dialog.Message("There was an error abandoning an old battle. Please contact Rukenshia").Title("StHub: ERR_SCRAPER_LOAD_REPORT_END_ABANDON_ACTIVE").Error()
+						return err
+					}
+
+					if _, err := s.reportBattleStart(info); err != nil {
+						if err.Error() == "ERR_NOT_IN_TESTING" {
+							log.Printf("scraper: ship not in testing, aborting")
+							if err := os.Remove(path); err != nil {
+								log.Printf("scraper: could not remove file: %v", err)
+								dialog.Message("Could not remove a battle file. Please contact Rukenshia").Title("StHub: ERR_SCRAPER_LOAD_REPORT_END_RM").Error()
+							}
+							return nil
+						}
+						log.Printf("scraper: could not report battle start after force-abandon: %v", err)
+						dialog.Message("There was an error reporting a battle, please contact Rukenshia").Title("StHub: ERR_SCRAPER_LOAD_REPORT_END_ABANDONED_START").Error()
+						return err
+					}
+				} else {
+					log.Printf("scraper: battle end is for timestamp %s, but active battle is %s", info.Timestamp, ab.Timestamp)
+					dialog.Message("It seems like there are multiple active battles, please contact Rukenshia to fix this bug").Title("StHub: ERR_SCRAPER_LOAD_TIMESTAMP_MISMATCH_NEWER").Error()
+				}
 				return err
 			}
 
@@ -284,6 +316,41 @@ func (s *Scraper) reportBattleStart(info *ModBattleInfo) (*battle.Battle, error)
 		return nil, err
 	}
 	return battle, nil
+}
+
+func (s *Scraper) abandonActiveBattle(activeBattle *battle.Battle) error {
+	// Construct a new Battle object
+	b := &battle.Battle{
+		ID:         activeBattle.ID,
+		Statistics: activeBattle.Statistics,
+		FinishedAt: activeBattle.FinishedAt,
+		StartedAt:  activeBattle.StartedAt,
+		ShipID:     activeBattle.ShipID,
+		ShipName:   activeBattle.ShipName,
+		Status:     "abandoned",
+		Timestamp:  activeBattle.Timestamp,
+	}
+
+	data, err := json.Marshal(b)
+	if err != nil {
+		return nil
+	}
+
+	res, err := grequests.Post("http://localhost:1323/iterations/current/battles/active", &grequests.RequestOptions{
+		RequestBody: bytes.NewBuffer(data),
+		Headers: map[string]string{
+			"Content-Type": "application/json",
+		},
+	})
+
+	if err != nil {
+		return err
+	}
+
+	if res.StatusCode != 200 {
+		return errors.New(res.String())
+	}
+	return nil
 }
 
 func (s *Scraper) reportBattleEnd(activeBattle *battle.Battle, info *ModBattleInfo) error {
