@@ -346,7 +346,14 @@ func (s *Scraper) handleResultsFile(path string) error {
 		}
 	}
 
-	return fmt.Errorf("could not find battle to map to results")
+	log.Printf("scraper: could not map results to battle. ignoring file")
+
+	// Ignore the file
+	if err := os.Remove(path); err != nil {
+		return err
+	}
+
+	return nil
 }
 
 func (s *Scraper) reportBattleStart(info *ModBattleInfo) (*battle.Battle, error) {
