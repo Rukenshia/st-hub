@@ -57,10 +57,10 @@ type Results struct {
 		SecondarySAP   AmmunitionResult
 		SecondaryHE    AmmunitionResult
 	}
-	FloodsCaused    uint64
-	ShipsDetected   uint64
+	FloodsCaused    float64
+	ShipsDetected   float64
 	LifeTime        float64
-	PlanesKilled    uint64
+	PlanesKilled    float64
 	DistanceCovered float64
 
 	Economics struct {
