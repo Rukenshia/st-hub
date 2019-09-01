@@ -62,6 +62,14 @@ func (s *Scraper) Start(clientVersion string) error {
 				if event.Op&fsnotify.Write == fsnotify.Write {
 					log.Println("scraper: detected change in", event.Name)
 
+					if strings.Contains(filepath.Base(event.Name), "results.") {
+						if err := s.handleResultsFile(event.Name); err != nil {
+							log.Printf("scraper: could not handle results file: %v", err)
+							dialog.Message("Could not process battle results. Please contact Rukenshia").Title("StHub: ERR_SCRAPER_HANDLE_RESULTS_FILE").Error()
+							continue
+						}
+					}
+
 					if !strings.Contains(filepath.Base(event.Name), "battle.") {
 						log.Printf("skipping unknown file")
 						continue
@@ -178,6 +186,14 @@ func (s *Scraper) loadCurrentFiles(dir string) error {
 			return nil
 		}
 
+		if strings.Contains(filepath.Base(path), "results.") {
+			if err := s.handleResultsFile(path); err != nil {
+				log.Printf("scraper: could not handle results file: %v", err)
+				dialog.Message("Could not process battle results. Please contact Rukenshia").Title("StHub: ERR_SCRAPER_HANDLE_RESULTS_FILE").Error()
+				return err
+			}
+		}
+
 		if !strings.Contains(filepath.Base(path), "battle.") {
 			return nil
 		}
@@ -289,6 +305,40 @@ func (s *Scraper) loadCurrentFiles(dir string) error {
 		}
 		return nil
 	})
+}
+
+func (s *Scraper) handleResultsFile(path string) error {
+	log.Printf("scraper: found %s", path)
+
+	data, err := ioutil.ReadFile(path)
+	if err != nil {
+		return err
+	}
+
+	info := new(battle.Results)
+	if err := json.Unmarshal(data, info); err != nil {
+		return err
+	}
+
+	log.Printf("battles: %d", len(s.c.GetCurrentIterationRaw().Battles))
+
+	// Find the battle with the given timestamp
+	for _, b := range s.c.GetCurrentIterationRaw().Battles {
+		log.Printf("%s != %s", info.Timestamp, b.Timestamp)
+		if b.Timestamp == info.Timestamp {
+			log.Printf("scraper: found battle with correct timestamp, adding results")
+
+			b.Results = info
+
+			if err := os.Remove(path); err != nil {
+				return err
+			}
+
+			return s.c.SaveCurrentIteration()
+		}
+	}
+
+	return fmt.Errorf("could not find battle to map to results")
 }
 
 func (s *Scraper) reportBattleStart(info *ModBattleInfo) (*battle.Battle, error) {

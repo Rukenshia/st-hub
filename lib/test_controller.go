@@ -48,6 +48,16 @@ func NewTestController(currentIteration *TestIteration) (*TestController, error)
 	}, currentIteration: file, activeBattle: activeBattle}, nil
 }
 
+// GetCurrentIterationRaw returns the currently active iteration
+func (t *TestController) GetCurrentIterationRaw() *TestIterationFile {
+	return t.currentIteration
+}
+
+// SaveCurrentIteration saves the current iteration file
+func (t *TestController) SaveCurrentIteration() error {
+	return t.currentIteration.Save()
+}
+
 // getFileFromContext loads or returns the TestIterationFile from the parameters in the request
 func (t *TestController) getFileFromContext(c echo.Context) (*TestIterationFile, error) {
 	iterationName := fmt.Sprintf("%s-%s", c.Param("clientVersion"), c.Param("iteration"))

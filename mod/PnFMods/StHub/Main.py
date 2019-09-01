@@ -1,11 +1,12 @@
 API_VERSION = 'API_v1.0'
 MOD_NAME = 'StHub'
 
-devmenu.enable()
+# devmenu.enable()
 
 
 class StHub:
     def __init__(self):
+        self.in_battle = False
         self.battle_timestamp = None
         self.battle_damage = 0
         self.in_division = False
@@ -21,7 +22,53 @@ class StHub:
         events.onSFMEvent(self.sfm_event)
 
     def sfm_event(self, name, data):
-        if name == 'action.onEnterDivision':
+        if name == "sfm.showResultScreen":
+            with open('api/results.%s' % (self.battle_timestamp), 'w') as f:
+                # Save the result screen information
+
+                results = dock.getBattleResultInfo()
+
+                data = {
+                    'Timestamp': self.battle_timestamp,
+                    'TeamID': results['team_id'],
+                    'WinnerTeamID': results['winner_team_id'],
+                    'BattleType': results['battle_type'],
+                    'Duration': results['duration_sec'],
+                    'PlaceInTeam': results['player_rank_exp'],
+
+                    'Damage': {
+                        'Sum': results['damage_sum'],
+                        'Fire': results['damage_fire'],
+                        'Flooding': results['damage_flood'],
+                        'Ramming': results['damage_ram'],
+                    },
+
+                    'Ammo': {
+                        'Torpedo': {'Damage': results['damage_tpd'], 'Shots': results['shots_tpd'], 'Hits': results['hits_tpd']},
+                        'PlaneBomb': {'Damage': results['damage_bomb'], 'Shots': results['shots_bomb'], 'Hits': results['hits_bomb']},
+                        'PlaneRocket': {'Damage': results['damage_rocket'], 'Shots': results['shots_rocket'], 'Hits': results['hits_rocket']},
+                        'MainBatteryAP': {'Damage': results['damage_main_ap'], 'Shots': results['shots_main_ap'], 'Hits': results['hits_main_ap']},
+                        'MainBatterySAP': {'Damage': results['damage_main_cs'], 'Shots': results['shots_main_cs'], 'Hits': results['hits_main_cs']},
+                        'MainBatteryHE': {'Damage': results['damage_main_he'], 'Shots': results['shots_main_he'], 'Hits': results['hits_main_he']},
+                        'SecondaryAP': {'Damage': results['damage_atba_ap'], 'Shots': results['shots_atba_ap'], 'Hits': results['hits_atba_ap']},
+                        'SecondarySAP': {'Damage': results['damage_atba_cs'], 'Shots': results['shots_atba_cs'], 'Hits': results['hits_atba_cs']},
+                        'SecondaryHE': {'Damage': results['damage_atba_he'], 'Shots': results['shots_atba_he'], 'Hits': results['hits_atba_he']},
+                    },
+
+                    'FloodsCaused': results['hits_flood'],
+                    'ShipsDetected': results['detected'],
+                    'LifeTime': results['life_time_sec'],
+                    'PlanesKilled': results['killed_plane'],
+                    'DistanceCovered': results['distance'],
+
+                    'Economics': {
+                        'Credits': results['credits'],
+                        'BaseExp': results['exp'],
+                    },
+                }
+
+                f.write(utils.jsonEncode(data))
+        elif name == 'action.onEnterDivision':
             self.in_division = True
         elif name == 'action.leaveDivision':
             self.in_division = False
