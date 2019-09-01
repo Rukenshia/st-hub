@@ -161,7 +161,7 @@
     {:else}
     {#each $filteredBattles as battle}
       <Battle {battle} on:update={updateField} />
-      <div class="mdc-layout-grid__cell--span-5-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-4-phone"></div>
+      <div class="mdc-layout-grid__cell--span-2-desktop mdc-layout-grid__cell--span-1-tablet mdc-layout-grid__cell--span-4-phone"></div>
     {/each}
     {/if}
   </div>

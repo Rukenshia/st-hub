@@ -9,8 +9,8 @@
 
   export let value;
   export let label;
-  export let helptext;
-  export let noEdit;
+  export let helptext = '';
+  export let noEdit = true;
 
   let editing = false;
   let buffer;

@@ -1,7 +1,8 @@
 <script>
   import Swords from './svg/swords.svelte';
-  import CorrectableInput from './CorrectableInput.svelte';
   import { createEventDispatcher } from 'svelte';
+  import ResultWithFallback from './ResultWithFallback.svelte';
+  import Result from './Result.svelte';
 
 	const dispatch = createEventDispatcher();
 
@@ -25,7 +26,7 @@
 </style>
 
 <div
-  class="mdc-card mdc-layout-grid__cell--span-6-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone">
+  class="mdc-card mdc-layout-grid__cell--span-10-desktop mdc-layout-grid__cell--span-8-tablet mdc-layout-grid__cell--span-4-phone">
   <div class="mdc-card__primary-action battle-card">
     <div class="battle-card__primary" on:click="{() => toggle = !toggle}">
       <div class="mdc-layout-grid" >
@@ -99,14 +100,22 @@
     <div class="battle-card__content">
       <div class="mdc-layout-grid">
         <div class="mdc-layout-grid__inner">
-          <div class="mdc-layout-grid__cell">
-            <CorrectableInput on:save={({ detail: {value} }) => updateValue('Damage', value)} noEdit={false} value={battle.Statistics.Damage} label="Damage" helptext="This value does not count fire and flooding damage by default." />
+          {#if battle.Results}
+          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop">
+            <Result label="Base Experience" value={battle.Results.Economics.BaseExp} />
           </div>
-          <div class="mdc-layout-grid__cell">
-            <CorrectableInput on:save={({ detail: {value} }) => updateValue('Kills', value)} noEdit={false} value={battle.Statistics.Kills} label="Kills" helptext="" />
+          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop">
+            <Result label="Credits" value={battle.Results.Economics.Credits} />
           </div>
-          <div class="mdc-layout-grid__cell">
-            <CorrectableInput value={battle.Statistics.InDivision} noEdit={true} label="In Division" helptext="" />
+          {/if}
+          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop">
+            <ResultWithFallback on:save={({ detail: {value} }) => updateValue('Damage', value)} label="Damage" value={battle.Results ? battle.Results.Damage.Sum : undefined} correctable={battle.Statistics.Damage} />
+          </div>
+          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop">
+            <ResultWithFallback on:save={({ detail: {value} }) => updateValue('Kills', value)} label="Kills" value={undefined} correctable={battle.Statistics.Kills} />
+          </div>
+          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop">
+            <ResultWithFallback on:save={({ detail: {value} }) => updateValue('InDivision', value)} label="In Division" value={undefined} correctable={battle.Statistics.InDivision} />
           </div>
         </div>
       </div>

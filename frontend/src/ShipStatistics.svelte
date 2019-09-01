@@ -6,7 +6,7 @@
 
   const val = v => v.Corrected ? v.Corrected : v.Value;
 
-  $: averageDamage = Math.round(battles.reduce((p, b) => p + val(b.Statistics.Damage), 0) / battles.length);
+  $: averageDamage = Math.round(battles.reduce((p, b) => p + (b.Results ? b.Results.Damage.Sum : val(b.Statistics.Damage)), 0) / battles.length);
   $: averageKills = Math.round(battles.reduce((p, b) => p + val(b.Statistics.Kills), 0) / battles.length * 100) / 100;
   $: survivalRate = Math.round(battles.reduce((p, b) => p + val(b.Statistics.Survived), 0) / battles.length * 100);
   $: winRate = Math.round(battles.reduce((p, b) => p + b.Statistics.Win, 0) / battles.length * 100);
