@@ -320,11 +320,19 @@ func (s *Scraper) handleResultsFile(path string) error {
 		return err
 	}
 
-	log.Printf("battles: %d", len(s.c.GetCurrentIterationRaw().Battles))
+	if _, ok := s.rejectedBattles[info.Timestamp]; ok {
+		log.Printf("scraper: ignoring previously rejected battle %s", info.Timestamp)
+		delete(s.rejectedBattles, info.Timestamp)
+
+		if err := os.Remove(path); err != nil {
+			log.Printf("scraper: could not remove file: %v", err)
+			dialog.Message("Could not remove a rejected battle file. Please contact Rukenshia").Title("StHub: ERR_BATTLE_FLOW_REPORT_REJECTED_RM").Error()
+		}
+		return nil
+	}
 
 	// Find the battle with the given timestamp
 	for _, b := range s.c.GetCurrentIterationRaw().Battles {
-		log.Printf("%s != %s", info.Timestamp, b.Timestamp)
 		if b.Timestamp == info.Timestamp {
 			log.Printf("scraper: found battle with correct timestamp, adding results")
 

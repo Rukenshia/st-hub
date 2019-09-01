@@ -16,6 +16,7 @@ require (
 	github.com/gobuffalo/packr/v2 v2.5.2
 	github.com/golang/groupcache v0.0.0-20190702054246-869f871628b6 // indirect
 	github.com/google/go-querystring v1.0.0 // indirect
+	github.com/gotk3/gotk3 v0.0.0-20190831133442-e289f56e4d6b // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.9.3 // indirect
 	github.com/kisielk/errcheck v1.2.0 // indirect
 	github.com/kr/pty v1.1.8 // indirect
