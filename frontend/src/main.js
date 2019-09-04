@@ -1,7 +1,12 @@
 import App from './App.svelte';
+import SetupApp from './setup/SetupApp.svelte';
 
-var app = new App({
-	target: document.body
-});
-
-export default app;
+if (window.location.hash == '#setup') {
+	var app = new SetupApp({
+		target: document.body
+	});
+} else {
+	var app = new App({
+		target: document.body
+	});
+}

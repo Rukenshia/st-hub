@@ -5,6 +5,8 @@ go 1.12
 require (
 	cloud.google.com/go v0.41.0 // indirect
 	github.com/GeertJohan/go.rice v1.0.0
+	github.com/asticode/go-astilectron v0.8.0
+	github.com/asticode/go-astitools v1.1.0 // indirect
 	github.com/coreos/bbolt v1.3.3 // indirect
 	github.com/coreos/etcd v3.3.13+incompatible // indirect
 	github.com/coreos/go-semver v0.3.0 // indirect

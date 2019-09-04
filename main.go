@@ -8,17 +8,18 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
+	"runtime"
 	"sthub/lib"
 	"sthub/lib/scraper"
-	"time"
 
 	"github.com/levigross/grequests"
 	"github.com/sqweek/dialog"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+
+	"github.com/asticode/go-astilectron"
 
 	rice "github.com/GeertJohan/go.rice"
 )
@@ -27,6 +28,40 @@ import (
 const VERSION = "0.4.3"
 
 func main() {
+	// Initialize astilectron
+	var a, _ = astilectron.New(astilectron.Options{
+		AppName: "StHub",
+		// AppIconDefaultPath: "<your .png icon>", // If path is relative, it must be relative to the data directory
+		// AppIconDarwinPath:  "<your .icns icon>", // Same here
+		// BaseDirectoryPath: "<where you want the provisioner to install the dependencies>",
+	})
+	defer a.Close()
+
+	// Start astilectron
+	a.Start()
+
+	var w, _ = a.NewWindow("http://localhost:5000/#setup", &astilectron.WindowOptions{
+		Center: astilectron.PtrBool(true),
+		Height: astilectron.PtrInt(800),
+		Width:  astilectron.PtrInt(600),
+	})
+
+	w.OnMessage(func(m *astilectron.EventMessage) interface{} {
+		// Unmarshal
+		var s string
+		m.Unmarshal(&s)
+
+		// Process message
+		if s == "connect" {
+			return "ok"
+		} else if s == "selectGameDir" {
+			return "some/path"
+		}
+		return nil
+	})
+
+	w.Create()
+
 	// Find current test iteration
 	res, err := grequests.Get("https://hv59yay1u3.execute-api.eu-central-1.amazonaws.com/live/iteration/current", nil)
 	if err != nil {
@@ -69,21 +104,15 @@ func main() {
 		return nil
 	})
 
-	go func() {
-		// Wait and open the browser
-		timer := time.NewTimer(100 * time.Millisecond)
-
-		<-timer.C
-
-		if err := exec.Command("rundll32", "url.dll,FileProtocolHandler", "https://sthub.in.fkn.space").Start(); err != nil {
-			log.Fatal("Could not open browser")
-		}
-	}()
-
 	// Start server
 	done := make(chan bool)
 	go func() {
 		e.Logger.Fatal(e.Start("localhost:1323"))
+		done <- true
+	}()
+
+	go func() {
+		a.Wait()
 		done <- true
 	}()
 
@@ -98,6 +127,13 @@ func main() {
 }
 
 func initApp(currentIteration *lib.TestIteration) (*Config, error) {
+	// ignore on mac (in-dev)
+	if runtime.GOOS == "darwin" {
+		return &Config{
+			WowsPath: "/tmp",
+		}, nil
+	}
+
 	// Load local config
 	execDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
