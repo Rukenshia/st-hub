@@ -152,10 +152,6 @@ body {
 	}
 }
 
-header {
-	margin: -8px;
-}
-
 footer {
 	a {
 		color: #cecece;
