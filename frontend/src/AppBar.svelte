@@ -48,6 +48,8 @@ header.mdc-top-app-bar {
   &.is-error {
     --mdc-theme-primary: #B00020;
   }
+
+  @apply bg-teal-600;
 }
 
 code {
