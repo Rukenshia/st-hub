@@ -32,7 +32,7 @@ steps:
   - export PATH=$PATH:$GOPATH/bin
   - go get github.com/GeertJohan/go.rice/rice
   - rice embed-go
-  - GOOS=windows GOARCH=amd64 go build
+	- GOOS=windows GOARCH=amd64 go build -ldflags -H=windowsgui
 - name: publish
   image: plugins/github-release
   settings:

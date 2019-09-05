@@ -11,7 +11,7 @@
   let apiError = false;
   let version = null;
 
-  const availableVersion = '0.4.3';
+  const availableVersion = '0.5.0';
 
 	const fetchIntegration = () => {
     return axios.get('http://localhost:1323/iterations/current')

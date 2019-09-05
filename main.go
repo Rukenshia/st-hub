@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"path"
 	"path/filepath"
 	"runtime"
 	"sthub/lib"
@@ -25,42 +26,29 @@ import (
 )
 
 // VERSION represents the current version of StHub (this component)
-const VERSION = "0.4.3"
+const VERSION = "0.5.0"
 
 func main() {
+	f, err := setupLogger()
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	// unpack logo
+	iconPath, err := unpackLogo()
+	defer os.Remove(iconPath)
+
 	// Initialize astilectron
 	var a, _ = astilectron.New(astilectron.Options{
-		AppName: "StHub",
-		// AppIconDefaultPath: "<your .png icon>", // If path is relative, it must be relative to the data directory
-		// AppIconDarwinPath:  "<your .icns icon>", // Same here
+		AppName:            "StHub",
+		AppIconDefaultPath: iconPath,
 		// BaseDirectoryPath: "<where you want the provisioner to install the dependencies>",
 	})
 	defer a.Close()
 
 	// Start astilectron
 	a.Start()
-
-	var w, _ = a.NewWindow("http://localhost:5000/#setup", &astilectron.WindowOptions{
-		Center: astilectron.PtrBool(true),
-		Height: astilectron.PtrInt(800),
-		Width:  astilectron.PtrInt(600),
-	})
-
-	w.OnMessage(func(m *astilectron.EventMessage) interface{} {
-		// Unmarshal
-		var s string
-		m.Unmarshal(&s)
-
-		// Process message
-		if s == "connect" {
-			return "ok"
-		} else if s == "selectGameDir" {
-			return "some/path"
-		}
-		return nil
-	})
-
-	w.Create()
 
 	// Find current test iteration
 	res, err := grequests.Get("https://hv59yay1u3.execute-api.eu-central-1.amazonaws.com/live/iteration/current", nil)
@@ -75,6 +63,107 @@ func main() {
 		log.Fatalln(err)
 	}
 
+	done := make(chan bool)
+
+	if !hasLocalConfig() {
+		var w, _ = a.NewWindow("https://sthub.in.fkn.space/#setup", &astilectron.WindowOptions{
+			Center: astilectron.PtrBool(true),
+			Height: astilectron.PtrInt(800),
+			Width:  astilectron.PtrInt(600),
+		})
+
+		w.OnMessage(func(m *astilectron.EventMessage) interface{} {
+			// Unmarshal
+			var s string
+			m.Unmarshal(&s)
+
+			// Process message
+			if s == "connect" {
+				return "ok"
+			} else if s == "selectGameDir" {
+				cfg, err := initApp(currentIteration)
+				if err != nil {
+					dialog.Message("%s", "Could not load configuration.").Title("StHub").Error()
+					os.Exit(1)
+				}
+
+				start(done, currentIteration)
+				return cfg.WowsPath
+			}
+			return nil
+		})
+
+		w.Create()
+	} else {
+		var w, _ = a.NewWindow("https://sthub.in.fkn.space", &astilectron.WindowOptions{
+			Center: astilectron.PtrBool(true),
+			Height: astilectron.PtrInt(800),
+			Width:  astilectron.PtrInt(600),
+		})
+		w.Create()
+
+		start(done, currentIteration)
+	}
+
+	go func() {
+		a.Wait()
+		done <- true
+	}()
+
+	<-done
+}
+
+// setupLogger opens the `sthub.log` file and sets go's standard logger output to it.
+func setupLogger() (*os.File, error) {
+	f, err := os.OpenFile("sthub.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatalf("error opening file: %v", err)
+		return nil, err
+	}
+
+	log.SetOutput(f)
+
+	return f, nil
+}
+
+// unpackLogo retrieves the embedded data from go.rice and writes it to a temporary file, so that astilectron can use it
+func unpackLogo() (string, error) {
+	tmpfile, err := ioutil.TempFile("", "sthub-logo")
+	if err != nil {
+		return "", err
+	}
+
+	assets := rice.MustFindBox("assets")
+	icon, err := assets.Bytes("logo.png")
+	if err != nil {
+		return "", err
+	}
+
+	if _, err := tmpfile.Write(icon); err != nil {
+		return "", err
+	}
+	if err := tmpfile.Close(); err != nil {
+		return "", err
+	}
+
+	return tmpfile.Name(), nil
+}
+
+// Returns whether a local config file exists
+func hasLocalConfig() bool {
+	execDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	if err != nil {
+		return false
+	}
+
+	if _, err := os.Stat(path.Join(execDir, "sthub-config.json")); os.IsNotExist(err) {
+		return false
+	}
+
+	return true
+}
+
+func start(done chan bool, currentIteration *lib.TestIteration) {
 	// Initialise the application
 	cfg, err := initApp(currentIteration)
 	if err != nil {
@@ -105,14 +194,8 @@ func main() {
 	})
 
 	// Start server
-	done := make(chan bool)
 	go func() {
 		e.Logger.Fatal(e.Start("localhost:1323"))
-		done <- true
-	}()
-
-	go func() {
-		a.Wait()
 		done <- true
 	}()
 
@@ -122,8 +205,6 @@ func main() {
 		dialog.Message("%s: %v", "Could not start waiting for info", err).Title("StHub: ERR_SCRAPER_START").Error()
 		log.Fatalln(err)
 	}
-
-	<-done
 }
 
 func initApp(currentIteration *lib.TestIteration) (*Config, error) {
@@ -161,9 +242,6 @@ func initApp(currentIteration *lib.TestIteration) (*Config, error) {
 
 	// Check if the WoWS path is set and still exists
 	if _, err := os.Stat(config.WowsPath); os.IsNotExist(err) {
-		dialog.Message("%s", "You need to pick the installation directory of your World of Warships client.").
-			Title("StHub Setup").
-			Info()
 		dir, err := dialog.Directory().Title("Choose World of Warships Installation Path").Browse()
 		if err != nil {
 			log.Fatalf("Could not pick directory: %v", err)
