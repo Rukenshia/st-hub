@@ -1,15 +1,15 @@
 <script>
   import { onMount } from 'svelte';
   import { MDCTopAppBar } from '@material/top-app-bar';
-  import { MDCSwitch } from '@material/switch';
+  // import { MDCSwitch } from '@material/switch';
   import { darkMode } from './stores';
 
   onMount(() => {
     // Initialise app bar
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
     const topAppBar = new MDCTopAppBar(topAppBarElement);
-    const switchControl = new MDCSwitch(document.querySelector('.mdc-switch'));
-    switchControl.getDefaultFoundation().setChecked($darkMode);
+    // const switchControl = new MDCSwitch(document.querySelector('.mdc-switch'));
+    // switchControl.getDefaultFoundation().setChecked($darkMode);
   });
 
   export let iteration = {
