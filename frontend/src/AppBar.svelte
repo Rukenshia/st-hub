@@ -68,7 +68,7 @@ code {
           <span><code>sthub</code> version: <strong>{version}</strong></span>
         {/if}
       </section>
-      <div class="toggle mdc-switch" class:mdc-switch--checked={$darkMode}>
+      <!-- <div class="toggle mdc-switch" class:mdc-switch--checked={$darkMode}>
         <div class="mdc-switch__track"></div>
         <div class="mdc-switch__thumb-underlay">
           <div class="mdc-switch__thumb">
@@ -76,7 +76,7 @@ code {
           </div>
         </div>
       </div>
-      <label for="mode-switch" class="mdc-typography--subtitle1"><strong>Dark mode</strong></label>
+      <label for="mode-switch" class="mdc-typography--subtitle1"><strong>Dark mode</strong></label> -->
     </section>
   </div>
 </header>
