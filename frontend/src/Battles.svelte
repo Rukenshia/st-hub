@@ -66,12 +66,8 @@
             @include mdc-chip-height(24px);
             font-size: 12px;
 
-            &.loss {
-              @include mdc-chip-fill-color(#fedede);
-            }
-
             &.abandoned {
-              @include mdc-chip-fill-color(rgb(252, 185, 65));
+              @apply bg-yellow-500;
               color: #121212;
             }
           }
@@ -84,13 +80,9 @@
         .mdc-chip {
           @include mdc-chip-fill-color(lighten(#121212, 11%));
           color: #cecece;
-          &.loss {
-            @include mdc-chip-fill-color(#ff574a);
-            color: rgba(0, 0, 0, 0.87);
-          }
 
           &.abandoned {
-            @include mdc-chip-fill-color(rgb(252, 185, 65));
+            @apply bg-yellow-500;
             color: #121212;
           }
         }

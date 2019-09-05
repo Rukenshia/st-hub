@@ -55,13 +55,18 @@
                 </div>
                 <div class="mdc-layout-grid__cell">
                   <div class="mdc-chip-set">
+                    {#if !battle.Results}
+                      <div class="mdc-chip abandoned">
+                        <div class="mdc-chip__text">Result screen missing</div>
+                      </div>
+                    {/if}
                     {#if battle.Status === 'active'}
                       <div class="mdc-chip">
                         <div class="mdc-chip__text">In Battle</div>
                       </div>
                       {:else if battle.Status === 'abandoned'}
-                      <div class="mdc-chip abandoned">
-                        <div class="mdc-chip__text">Abandoned</div>
+                      <div class="mdc-chip">
+                        <div class="mdc-chip__text">Left</div>
                       </div>
                       {:else}
                       <div
@@ -98,6 +103,15 @@
 
     {#if toggle}
     <div class="battle-card__content">
+      {#if !battle.Results}
+      <div class="mdc-layout-grid">
+        <div class="mdc-layout-grid__inner">
+          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12 bg-yellow-500 text-gray-900 p-4 rounded-sm">
+            This battle does not contain 100% accurate data, because you left it before the game ended. To collect all data, please stay until you see the "Results screen" of a battle.
+          </div>
+        </div>
+      </div>
+      {/if}
       <div class="mdc-layout-grid">
         <div class="mdc-layout-grid__inner">
           {#if battle.Results}
