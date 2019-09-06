@@ -13,4 +13,5 @@ build:
 	GOOS=windows GOARCH=amd64 go build -ldflags -H=windowsgui
 
 .PHONY: icon
+icon:
 	rsrc -ico=assets/sthub.ico

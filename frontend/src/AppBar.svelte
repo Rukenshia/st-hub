@@ -15,6 +15,7 @@
   export let iteration = {
     ClientVersion: 'loading',
     IterationName: 'loading',
+    Ships: [],
   };
 
   export let version = null;

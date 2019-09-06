@@ -115,20 +115,20 @@
       <div class="mdc-layout-grid">
         <div class="mdc-layout-grid__inner">
           {#if battle.Results}
-          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop">
+          <div class="mdc-layout-grid__cell">
             <Result label="Base Experience" value={battle.Results.Economics.BaseExp} />
           </div>
-          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop">
+          <div class="mdc-layout-grid__cell">
             <Result label="Credits" value={battle.Results.Economics.Credits} />
           </div>
           {/if}
-          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop">
+          <div class="mdc-layout-grid__cell">
             <ResultWithFallback on:save={({ detail: {value} }) => updateValue('Damage', value)} label="Damage" value={battle.Results ? battle.Results.Damage.Sum : undefined} correctable={battle.Statistics.Damage} />
           </div>
-          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop">
+          <div class="mdc-layout-grid__cell">
             <ResultWithFallback on:save={({ detail: {value} }) => updateValue('Kills', value)} label="Kills" value={undefined} correctable={battle.Statistics.Kills} />
           </div>
-          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2-desktop">
+          <div class="mdc-layout-grid__cell">
             <ResultWithFallback on:save={({ detail: {value} }) => updateValue('InDivision', value)} label="In Division" value={undefined} correctable={battle.Statistics.InDivision} />
           </div>
         </div>

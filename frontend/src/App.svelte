@@ -1,15 +1,18 @@
 <script>
-	import { battles, iteration, darkMode, activeBattle } from './stores';
-  import DivisionStatistics from './DivisionStatistics.svelte';
-  import VersionNotice from './VersionNotice.svelte';
-	import ShipsList from './ShipsList.svelte';
+	import { activeBattle, battles, darkMode, iteration } from './stores';
 	import AppBar from './AppBar.svelte';
-	import Battles from './Battles.svelte';
+	import VersionNotice from './VersionNotice.svelte';
 	import axios from 'axios';
   import { onMount } from 'svelte';
+  import { Router, Link, Route } from "svelte-routing";
+
+  // Views
+	import Dashboard from './routes/Dashboard.svelte';
+	import ShipDetails from './routes/ShipDetails.svelte';
 
   let apiError = false;
-  let version = null;
+  let version;
+  let url = window.location.pathname;
 
   const availableVersion = '0.5.0';
 
@@ -165,11 +168,10 @@ footer {
 <VersionNotice {availableVersion} {version} />
 {/if}
 
-<DivisionStatistics/>
-
-<ShipsList ships={$iteration.Ships} />
-
-<Battles />
+<Router {url}>
+  <Route path="/" component="{Dashboard}"></Route>
+  <Route path="/details/:id" component="{ShipDetails}"></Route>
+</Router>
 
 <footer>
 	<div class="mdc-typography--subtitle2" style="text-align: center;">

@@ -42,7 +42,7 @@
     "@mdi/js": "^4.2.95",
     "axios": "^0.19.0",
     "sirv-cli": "^0.4.4",
-    "svelte-routing": "^1.2.1",
+    "svelte-routing": "^1.4.0",
     "tailwindcss": "^1.0.6"
   },
   "scripts": {

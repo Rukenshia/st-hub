@@ -11,6 +11,9 @@
   function toggle(shipName) {
     showInfo[shipName] = !(showInfo[shipName] || false);
   }
+
+  function showDetails(shipId) {
+  }
 </script>
 
 <style lang="scss">
@@ -75,9 +78,18 @@
           </div>
 
           {#if showInfo[ship.Name]}
-            <ShipStatistics ship={ship.Name} battles={$battles.filter(b => b.ShipID === ship.ID)} />
+            <ShipStatistics battles={$battles.filter(b => b.ShipID === ship.ID)} />
           {/if}
         </div>
+
+        {#if showInfo[ship.Name]}
+          <div class="mb-4 ml-2 mt-4">
+            <a on:click={() => showDetails(ship.ID)} href={`/details/${ship.ID}`} class="px-3 py-2 text-teal-500 hover:text-teal-600 font-medium">
+              More details
+              <!-- <span class="rounded-sm bg-teal-600 px-2 py-1 text-sm text-gray-200">new</span> -->
+            </a>
+          </div>
+        {/if}
       </div>
     </div>
     {/each}
