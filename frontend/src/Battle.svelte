@@ -55,7 +55,7 @@
                 </div>
                 <div class="mdc-layout-grid__cell">
                   <div class="mdc-chip-set">
-                    {#if !battle.Results}
+                    {#if !battle.Results && battle.Status !== 'active'}
                       <div class="mdc-chip abandoned">
                         <div class="mdc-chip__text">Result screen missing</div>
                       </div>
