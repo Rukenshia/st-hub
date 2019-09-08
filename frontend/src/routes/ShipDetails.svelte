@@ -3,6 +3,7 @@
   import { derived } from 'svelte/store';
 
   import ShipStatistics from '../ShipStatistics.svelte';
+  import DamageBreakdownGraph from '../DamageBreakdownGraph.svelte';
 
   export let id;
   export let location;
@@ -28,9 +29,14 @@
     <div class="pl-2 mt-4 mb-32">
       <div class="text-2xl">Detailed Ship Statistics for {$ship.Name}</div>
 
+      <div class="flex">
+        <DamageBreakdownGraph battles={shipBattles} />
+      </div>
+
       <div class="flex mt-4 ml-4 mb-4">
         <div class="">
           <strong>Battles:</strong> {$shipBattles.length}<br />
+          <strong>Battles counted for graphs:</strong> {$shipBattles.filter(b => b.Results !== undefined).length}<br />
           <strong>Battles (in division):</strong> {$shipBattles.filter(b => b.Statistics.InDivision.Value === true).length}<br />
           <strong>Battles (in division):</strong> {$shipBattles.filter(b => b.Statistics.InDivision.Value === true).length}<br />
         </div>
