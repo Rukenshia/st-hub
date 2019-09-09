@@ -26,6 +26,9 @@
 
   let averageExp = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.Economics.BaseExp));
   let averageCredits = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.Economics.Credits));
+  let averageLifetime = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.LifeTime));
+  let averagePlanesKilled = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.PlanesKilled));
+  let averageFloodsCaused = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.FloodsCaused));
 
   onMount(() => {
     document.querySelectorAll('.mdc-text-field').forEach(t => new MDCTextField(t));
@@ -79,6 +82,22 @@
       </div>
 
       <ShipStatistics battles={$shipBattles} />
+
+      <div class="mdc-text-field stat-text-field">
+        <input type="text" id="averageLifetime" class="mdc-text-field__input" disabled value={$averageLifetime ? $averageLifetime : '0'}>
+        <label class="mdc-floating-label" for="averageLifetime">Average Lifetime (seconds)</label>
+        <div class="mdc-line-ripple"></div>
+      </div>
+      <div class="mdc-text-field stat-text-field">
+        <input type="text" id="averagePlanesKilled" class="mdc-text-field__input" disabled value={$averagePlanesKilled ? $averagePlanesKilled : 'n/a'}>
+        <label class="mdc-floating-label" for="averagePlanesKilled">Average Planes Killed</label>
+        <div class="mdc-line-ripple"></div>
+      </div>
+      <div class="mdc-text-field stat-text-field">
+        <input type="text" id="averageFloodsCaused" class="mdc-text-field__input" disabled value={$averageFloodsCaused ? $averageFloodsCaused : '0'}>
+        <label class="mdc-floating-label" for="averageFloodsCaused">Average Floods caused</label>
+        <div class="mdc-line-ripple"></div>
+      </div>
 
       <div class="flex">
         <div class="w-3/4 p-4 mt-4 ml-4 rounded-sm bg-gray-900 text-gray-100">Watch this space! Additional information will follow soon™️</div>
