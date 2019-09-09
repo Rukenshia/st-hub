@@ -24,8 +24,8 @@
   let ship = derived(iteration, it => it ? it.Ships.find(s => `${s.ID}` === id) : { Name: '...' });
   let shipBattles = derived(battles, newBattles => newBattles.filter(b => b.ShipID === $ship.ID));
 
-  let averageExp = derived(battles, newBattles => getAverage(newBattles, v => v.Results.Economics.BaseExp));
-  let averageCredits = derived(battles, newBattles => getAverage(newBattles, v => v.Results.Economics.Credits));
+  let averageExp = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.Economics.BaseExp));
+  let averageCredits = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.Economics.Credits));
 
   onMount(() => {
     document.querySelectorAll('.mdc-text-field').forEach(t => new MDCTextField(t));
