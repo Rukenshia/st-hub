@@ -10,6 +10,9 @@
     const topAppBar = new MDCTopAppBar(topAppBarElement);
     // const switchControl = new MDCSwitch(document.querySelector('.mdc-switch'));
     // switchControl.getDefaultFoundation().setChecked($darkMode);
+
+    // Load cookie acceptance
+    cookiesAccepted = window.localStorage.getItem('STHUB_COOKIES_ACCEPTED') !== null;
   });
 
   export let iteration = {
@@ -21,6 +24,13 @@
   export let version = null;
 
   export let apiError = false;
+
+  let cookiesAccepted = true;
+
+  function accept() {
+    cookiesAccepted = true;
+    window.localStorage.setItem('STHUB_COOKIES_ACCEPTED', true);
+  }
 </script>
 
 <style lang="scss">
@@ -83,3 +93,11 @@ code {
     </section>
   </div>
 </header>
+
+{#if !cookiesAccepted}
+<div class="fixed z-50 bottom-0 p-4 bg-gray-500 text-gray-900">
+  This website uses cookies to gain anonymised usage statistics (namely, using Google Analytics to find out if people actually use StHub).
+
+  <button on:click={accept} class="rounded-sm bg-gray-800 text-gray-200 ml-2 px-2 py-1 hover:bg-gray-900">Alright</button>
+</div>
+{/if}

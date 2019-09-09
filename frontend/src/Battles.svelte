@@ -33,7 +33,7 @@
     battle.Statistics[field].Corrected = parseInt(value, 10);
     $battles[idx].Statistics[field].Corrected = parseInt(value, 10);
 
-    return axios.put(`http://localhost:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles/${battle.ID}`, battle)
+    return axios.put(`https://c7434187-c6a3-4762-902b-2cc0e315df5d.mock.pstmn.io/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles/${battle.ID}`, battle)
       .catch(err => {
         alert(`Please go talk to rukenshia: ${err}`)
       });

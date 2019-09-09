@@ -47,7 +47,10 @@
 <div class="mdc-layout-grid sl-header">
   <div class="mdc-layout-grid__inner">
     <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-      <h2 class="mdc-typography--headline4">Ships in this test iteration</h2>
+      <div class="flex">
+        <h2 class="mdc-typography--headline4">Ships in this test iteration</h2>
+        <!--<a href="/ships/compare" class="ml-4 rounded-sm border border-teal-600 px-3 py-2 text-teal-600 hover:border-teal-400 hover:text-teal-400 uppercase">Compare all testships</a>-->
+      </div>
     </div>
   </div>
 </div>

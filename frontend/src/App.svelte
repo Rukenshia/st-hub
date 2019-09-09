@@ -17,7 +17,7 @@
   const availableVersion = '0.5.0';
 
 	const fetchIntegration = () => {
-    return axios.get('http://localhost:1323/iterations/current')
+    return axios.get('https://c7434187-c6a3-4762-902b-2cc0e315df5d.mock.pstmn.io/iterations/current')
       .then(r => {
         apiError = false;
         return r;
@@ -30,7 +30,7 @@
 	};
 
 	const fetchBattles = () => {
-    return axios.get(`http://localhost:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`)
+    return axios.get(`https://c7434187-c6a3-4762-902b-2cc0e315df5d.mock.pstmn.io/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`)
       .then(r => {
         apiError = false;
         return r;
@@ -43,7 +43,7 @@
 	};
 
 	const fetchVersion = () => {
-    return axios.get(`http://localhost:1323/version`)
+    return axios.get(`https://c7434187-c6a3-4762-902b-2cc0e315df5d.mock.pstmn.io/version`)
       .then(r => {
         apiError = false;
         return r.data;
@@ -78,11 +78,11 @@
         return false;
       }
 
-      setInterval(async () => {
-        const resBattles = await fetchBattles();
-        $battles = resBattles.data === null ? [] : resBattles.data.reverse();
-        $activeBattle = $battles.find(b => b.Status === 'active');
-      }, 2500);
+      //setInterval(async () => {
+        //const resBattles = await fetchBattles();
+        //$battles = resBattles.data === null ? [] : resBattles.data.reverse();
+        //$activeBattle = $battles.find(b => b.Status === 'active');
+      //}, 2500);
 
       return true;
     };
