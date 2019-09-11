@@ -18,11 +18,21 @@
   font-weight: normal;
 }
 
-.ship-card {
-  transition: height .2s;
+.max-h-0 {
+  max-height: 0;
+}
 
+.max-h-300 {
+  max-height: 360px;
+}
+
+.ship-card {
   .ship-header {
     @apply pt-4;
+  }
+
+  .ship-card__content {
+    transition: max-height .375s;
   }
 }
 
@@ -58,17 +68,14 @@
       </i>
     </div>
 
-    {#if showInfo}
+    <div class="ship-card__content" class:max-h-0={!showInfo} class:max-h-300={showInfo}>
       <ShipBasicAverageStats battles={$battles} />
-    {/if}
-  </div>
-
-  {#if showInfo}
-    <div class="mb-4 ml-2 mt-4">
-      <a href={`/details/${ship.ID}`} class="px-3 py-2 text-teal-500 hover:text-teal-600 font-medium">
-        More details
-        <!-- <span class="rounded-sm bg-teal-600 px-2 py-1 text-sm text-gray-200">new</span> -->
-      </a>
+      <div class="pb-8 mb-2 ml-2 mt-2 h-0">
+        <a href={`/details/${ship.ID}`} class="px-3 py-2 text-teal-500 hover:text-teal-600 font-medium">
+          More details
+          <!-- <span class="rounded-sm bg-teal-600 px-2 py-1 text-sm text-gray-200">new</span> -->
+        </a>
+      </div>
     </div>
-  {/if}
+  </div>
 </div>
