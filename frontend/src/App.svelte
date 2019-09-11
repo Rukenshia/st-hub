@@ -10,11 +10,15 @@
 	import Dashboard from './routes/Dashboard.svelte';
 	import ShipDetails from './routes/ShipDetails.svelte';
 
+  // SVG
+  import SpaceSvg from './svg/space.svelte';
+
   let apiError = false;
   let version;
   let url = window.location.pathname;
 
   const availableVersion = '0.5.0';
+  let loaded = false;
 
 	const fetchIntegration = () => {
     return axios.get('http://localhost:1323/iterations/current')
@@ -33,6 +37,7 @@
     return axios.get(`http://localhost:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`)
       .then(r => {
         apiError = false;
+        setTimeout(() => loaded = true, 500);
         return r;
       })
       .catch(err => {
@@ -168,10 +173,21 @@ footer {
 <VersionNotice {availableVersion} {version} />
 {/if}
 
+{#if !loaded}
+
+<div class="mx-auto mt-32 w-1/2 mb-64">
+  <h1 class="text-2xl text-center pb-4">Loading your data</h1>
+  <SpaceSvg />
+</div>
+
+{:else}
+
 <Router {url}>
   <Route path="/" component="{Dashboard}"></Route>
   <Route path="/details/:id" component="{ShipDetails}"></Route>
 </Router>
+
+{/if}
 
 <footer>
 	<div class="mdc-typography--subtitle2" style="text-align: center;">
