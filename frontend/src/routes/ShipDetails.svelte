@@ -4,7 +4,7 @@
   import { onMount } from 'svelte';
   import { MDCTextField } from '@material/textfield';
 
-  import ShipStatistics from '../ShipStatistics.svelte';
+  import ShipBasicAverageStats from '../ShipBasicAverageStats.svelte';
   import DamageBreakdownGraph from '../DamageBreakdownGraph.svelte';
 
   export let id;
@@ -81,7 +81,7 @@
         </div>
       </div>
 
-      <ShipStatistics battles={$shipBattles} />
+      <ShipBasicAverageStats battles={$shipBattles} />
 
       <div class="mdc-text-field stat-text-field">
         <input type="text" id="averageLifetime" class="mdc-text-field__input" disabled value={$averageLifetime ? $averageLifetime : '0'}>

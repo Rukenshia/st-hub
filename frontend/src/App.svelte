@@ -17,7 +17,7 @@
   const availableVersion = '0.5.0';
 
 	const fetchIntegration = () => {
-    return axios.get('http://localhost:1323/iterations/current')
+    return axios.get('https://c7434187-c6a3-4762-902b-2cc0e315df5d.mock.pstmn.io/iterations/current')
       .then(r => {
         apiError = false;
         return r;
@@ -30,7 +30,7 @@
 	};
 
 	const fetchBattles = () => {
-    return axios.get(`http://localhost:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`)
+    return axios.get(`https://c7434187-c6a3-4762-902b-2cc0e315df5d.mock.pstmn.io/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`)
       .then(r => {
         apiError = false;
         return r;
@@ -43,7 +43,7 @@
 	};
 
 	const fetchVersion = () => {
-    return axios.get(`http://localhost:1323/version`)
+    return axios.get(`https://c7434187-c6a3-4762-902b-2cc0e315df5d.mock.pstmn.io/version`)
       .then(r => {
         apiError = false;
         return r.data;
