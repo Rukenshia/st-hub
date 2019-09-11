@@ -78,11 +78,11 @@
         return false;
       }
 
-      //setInterval(async () => {
-        //const resBattles = await fetchBattles();
-        //$battles = resBattles.data === null ? [] : resBattles.data.reverse();
-        //$activeBattle = $battles.find(b => b.Status === 'active');
-      //}, 2500);
+      setInterval(async () => {
+        const resBattles = await fetchBattles();
+        $battles = resBattles.data === null ? [] : resBattles.data.reverse();
+        $activeBattle = $battles.find(b => b.Status === 'active');
+      }, 2500);
 
       return true;
     };
