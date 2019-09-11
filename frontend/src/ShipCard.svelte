@@ -59,7 +59,7 @@
     </div>
 
     {#if showInfo}
-      <ShipBasicAverageStats {$battles} />
+      <ShipBasicAverageStats battles={$battles} />
     {/if}
   </div>
 
