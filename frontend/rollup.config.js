@@ -3,6 +3,7 @@ import resolve from 'rollup-plugin-node-resolve';
 import commonjs from 'rollup-plugin-commonjs';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import replace from 'rollup-plugin-replace';
 import autoPreprocess from 'svelte-preprocess';
 
 const production = !process.env.ROLLUP_WATCH;
@@ -16,6 +17,9 @@ export default {
 		file: 'public/bundle.js'
 	},
 	plugins: [
+    replace({
+      ENDPOINT: JSON.stringify(process.env['STHUB_ENDPOINT'] || 'http://localhost:1323'),
+    }),
 		svelte({
 			preprocess: autoPreprocess({
         postcss: { plugins: [require('tailwindcss')], extract: true},

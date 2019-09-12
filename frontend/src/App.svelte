@@ -21,7 +21,7 @@
   let loaded = false;
 
 	const fetchIntegration = () => {
-    return axios.get('http://localhost:1323/iterations/current')
+    return axios.get(`${ENDPOINT}/iterations/current`)
       .then(r => {
         apiError = false;
         return r;
@@ -34,7 +34,7 @@
 	};
 
 	const fetchBattles = () => {
-    return axios.get(`http://localhost:1323/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`)
+    return axios.get(`${ENDPOINT}/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`)
       .then(r => {
         apiError = false;
         setTimeout(() => loaded = true, 500);
@@ -48,7 +48,7 @@
 	};
 
 	const fetchVersion = () => {
-    return axios.get(`http://localhost:1323/version`)
+    return axios.get(`${ENDPOINT}/version`)
       .then(r => {
         apiError = false;
         return r.data;

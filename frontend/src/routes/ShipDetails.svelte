@@ -6,6 +6,9 @@
 
   import ShipBasicAverageStats from '../ShipBasicAverageStats.svelte';
   import DamageBreakdownGraph from '../DamageBreakdownGraph.svelte';
+  import ShipName from '../ShipName.svelte';
+
+  import { getShipInfo } from '../wows';
 
   export let id;
   export let location;
@@ -30,8 +33,12 @@
   let averagePlanesKilled = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.PlanesKilled));
   let averageFloodsCaused = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.FloodsCaused));
 
-  onMount(() => {
+  let shipInfo;
+
+  onMount(async () => {
     document.querySelectorAll('.mdc-text-field').forEach(t => new MDCTextField(t));
+
+    shipInfo = await getShipInfo(id);
   });
 </script>
 
@@ -41,7 +48,21 @@
 .stat-text-field.mdc-text-field input {
   border: none;
 }
+
+.background {
+  position: absolute;
+  top: 0;
+  z-index: -1;
+
+  background: url(/bg.jpg) no-repeat fixed;
+  background-size: cover;
+  width: 100%;
+  height: 400px;
+  opacity: 0.3;
+}
 </style>
+
+<div class="background"></div>
 
 <div class="p-4">
   {#if !$ship}
@@ -57,8 +78,19 @@
         </div>
       </div>
     </a>
-    <div class="pl-2 mt-4 mb-32">
-      <div class="text-2xl">Detailed Ship Statistics for {$ship.Name}</div>
+    <div class="pl-2 mb-32 w-full">
+      {#if shipInfo}
+      <div class="flex justify-between pb-8">
+        <div class="w-1/2 md:w-1/3 mx-auto">
+          <img class="" src={shipInfo.images.large} />
+          <div class="flex justify-between">
+            <div class="mx-auto">
+            <ShipName name={shipInfo.name} tier={shipInfo.tier} type={shipInfo.type} nation={shipInfo.nation} />
+            </div>
+          </div>
+        </div>
+      </div>
+      {/if}
 
       <div class="w-full md:w-1/2">
         <DamageBreakdownGraph battles={shipBattles} />
