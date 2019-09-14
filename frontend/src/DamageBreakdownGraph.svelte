@@ -77,7 +77,7 @@
   });
 </script>
 
-<div class="border rounded-sm border-gray-900 bg-gray-900 p-4">
+<div class="">
   <h1 class="text-xl">Damage breakdown</h1>
   <canvas with="100%" height="100%" id="damageBreakdown"></canvas>
 </div>

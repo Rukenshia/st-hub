@@ -30,6 +30,7 @@
   let averageExp = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.Economics.BaseExp));
   let averageCredits = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.Economics.Credits));
   let averageLifetime = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.LifeTime));
+  let averageBattleDuration = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.Duration));
   let averagePlanesKilled = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.PlanesKilled));
   let averageFloodsCaused = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.FloodsCaused));
 
@@ -96,39 +97,65 @@
         <DamageBreakdownGraph battles={shipBattles} />
 
         <div class="mt-4">
-          <div class="mdc-text-field stat-text-field">
-            <input type="text" id="shipBattles" class="mdc-text-field__input" disabled value={$shipBattles.length}>
-            <label class="mdc-floating-label" for="shipBattles">Battles played</label>
-            <div class="mdc-line-ripple"></div>
-          </div>
-          <div class="mdc-text-field stat-text-field">
-            <input type="text" id="averageExp" class="mdc-text-field__input" disabled value={$averageExp ? $averageExp : 'n/a'}>
-            <label class="mdc-floating-label" for="averageExp">Average Base EXP</label>
-            <div class="mdc-line-ripple"></div>
-          </div>
-          <div class="mdc-text-field stat-text-field">
-            <input type="text" id="averageCredits" class="mdc-text-field__input" disabled value={$averageCredits ? $averageCredits : 'n/a'}>
-            <label class="mdc-floating-label" for="averageCredits">Average Credits</label>
-            <div class="mdc-line-ripple"></div>
-          </div>
-        </div>
+          <h1 class="text-2xl">Overall Statistics</h1>
 
-        <ShipBasicAverageStats battles={$shipBattles} />
+          <div class="p-4">
+            <h2 class="text-xl">Basic info</h2>
+            <div class="p-2">
+              <div class="mdc-text-field stat-text-field">
+                <input type="text" id="shipBattles" class="mdc-text-field__input" disabled value={$shipBattles.length}>
+                <label class="mdc-floating-label" for="shipBattles">Battles played</label>
+                <div class="mdc-line-ripple"></div>
+              </div>
+              <div class="mdc-text-field stat-text-field">
+                <input type="text" id="averageExp" class="mdc-text-field__input" disabled value={$averageExp ? $averageExp : 'n/a'}>
+                <label class="mdc-floating-label" for="averageExp">Average Base EXP</label>
+                <div class="mdc-line-ripple"></div>
+              </div>
+              <div class="mdc-text-field stat-text-field">
+                <input type="text" id="averageCredits" class="mdc-text-field__input" disabled value={$averageCredits ? $averageCredits : 'n/a'}>
+                <label class="mdc-floating-label" for="averageCredits">Average Credits</label>
+                <div class="mdc-line-ripple"></div>
+              </div>
+            </div>
 
-        <div class="mdc-text-field stat-text-field">
-          <input type="text" id="averageLifetime" class="mdc-text-field__input" disabled value={$averageLifetime ? $averageLifetime : '0'}>
-          <label class="mdc-floating-label" for="averageLifetime">Average Lifetime (seconds)</label>
-          <div class="mdc-line-ripple"></div>
-        </div>
-        <div class="mdc-text-field stat-text-field">
-          <input type="text" id="averagePlanesKilled" class="mdc-text-field__input" disabled value={$averagePlanesKilled ? $averagePlanesKilled : 'n/a'}>
-          <label class="mdc-floating-label" for="averagePlanesKilled">Average Planes Killed</label>
-          <div class="mdc-line-ripple"></div>
-        </div>
-        <div class="mdc-text-field stat-text-field">
-          <input type="text" id="averageFloodsCaused" class="mdc-text-field__input" disabled value={$averageFloodsCaused ? $averageFloodsCaused : '0'}>
-          <label class="mdc-floating-label" for="averageFloodsCaused">Average Floods caused</label>
-          <div class="mdc-line-ripple"></div>
+            <h2 class="text-xl">Effectiveness</h2>
+            <div class="p-2">
+              <ShipBasicAverageStats battles={$shipBattles} />
+            </div>
+
+            <h2 class="text-xl">Survivability</h2>
+            <div class="p-2">
+              <div class="mdc-text-field stat-text-field">
+                <input type="text" id="averageLifetime" class="mdc-text-field__input" disabled value={$averageLifetime ? $averageLifetime : '0'}>
+                <label class="mdc-floating-label" for="averageLifetime">Average Lifetime (seconds)</label>
+                <div class="mdc-line-ripple"></div>
+              </div>
+              <div class="mdc-text-field stat-text-field">
+                <input type="text" id="averageBattleDuration" class="mdc-text-field__input" disabled value={$averageBattleDuration ? $averageBattleDuration : '0'}>
+                <label class="mdc-floating-label" for="averageBattleDuration">Average Battle duration (seconds)</label>
+                <div class="mdc-line-ripple"></div>
+              </div>
+            </div>
+
+            <h2 class="text-xl">Anti aircraft</h2>
+            <div class="p-2">
+              <div class="mdc-text-field stat-text-field">
+                <input type="text" id="averagePlanesKilled" class="mdc-text-field__input" disabled value={$averagePlanesKilled ? $averagePlanesKilled : 'n/a'}>
+                <label class="mdc-floating-label" for="averagePlanesKilled">Average Planes Killed</label>
+                <div class="mdc-line-ripple"></div>
+              </div>
+            </div>
+
+            <h2 class="text-xl">Other data</h2>
+            <div class="p-2">
+              <div class="mdc-text-field stat-text-field">
+                <input type="text" id="averageFloodsCaused" class="mdc-text-field__input" disabled value={$averageFloodsCaused ? $averageFloodsCaused : '0'}>
+                <label class="mdc-floating-label" for="averageFloodsCaused">Average Floods caused</label>
+                <div class="mdc-line-ripple"></div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
