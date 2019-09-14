@@ -26,17 +26,7 @@
   onMount(() => {
     const el = document.getElementById('damageBreakdown');
 
-    damageBreakdown.subscribe(breakdown => {
-      // get percentages
-      const main_ap = Math.round(breakdown.main_ap / breakdown.total * 100);
-      const main_he = Math.round(breakdown.main_he / breakdown.total * 100);
-      const secondary = Math.round(breakdown.secondary / breakdown.total * 100);
-      const torpedo = Math.round(breakdown.torpedo / breakdown.total * 100);
-      const fire = Math.round(breakdown.fire / breakdown.total * 100);
-      const flood = Math.round(breakdown.flood / breakdown.total * 100);
-      const ram = Math.round(breakdown.ram / breakdown.total * 100);
-
-      new Chart(el, {
+    const chart =  new Chart(el, {
         type: 'pie',
         options: {
           tooltips: {
@@ -54,20 +44,34 @@
         },
         data: {
           labels: ['Main battery AP', 'Main battery HE', 'Secondary battery', 'Torpedo', 'Fire', 'Flooding', 'Ramming'],
-          datasets: [{
-            data: [main_ap, main_he, secondary, torpedo, fire, flood, ram],
-            backgroundColor: [
-              'rgb(210, 77, 87)',
-              'rgb(244, 179, 80)',
-              'rgb(236, 236, 236)',
-              'rgb(103, 128, 159)',
-              'rgb(226, 106, 106)',
-              'rgb(0, 181, 204)',
-              'rgb(36, 37, 42)'
-            ],
-          }],
+
         },
       });
+
+    damageBreakdown.subscribe(breakdown => {
+      // get percentages
+      const main_ap = Math.round(breakdown.main_ap / breakdown.total * 100);
+      const main_he = Math.round(breakdown.main_he / breakdown.total * 100);
+      const secondary = Math.round(breakdown.secondary / breakdown.total * 100);
+      const torpedo = Math.round(breakdown.torpedo / breakdown.total * 100);
+      const fire = Math.round(breakdown.fire / breakdown.total * 100);
+      const flood = Math.round(breakdown.flood / breakdown.total * 100);
+      const ram = Math.round(breakdown.ram / breakdown.total * 100);
+
+      chart.data.datasets = [{
+        data: [main_ap, main_he, secondary, torpedo, fire, flood, ram],
+        backgroundColor: [
+          'rgb(210, 77, 87)',
+          'rgb(244, 179, 80)',
+          'rgb(236, 236, 236)',
+          'rgb(103, 128, 159)',
+          'rgb(226, 106, 106)',
+          'rgb(0, 181, 204)',
+          'rgb(36, 37, 42)'
+        ],
+      }];
+
+      chart.update(0);
     });
 
   });
