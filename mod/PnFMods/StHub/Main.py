@@ -5,6 +5,12 @@ MOD_NAME = 'StHub'
 
 
 class StHub:
+    """
+    Main wrapper class for StHub. This class will track
+    the game and battle state, and use a file based API
+    to communicate to the sthub.exe running on the same
+    machine.
+    """
     def __init__(self):
         self.in_battle = False
         self.battle_timestamp = None
@@ -22,6 +28,12 @@ class StHub:
         events.onSFMEvent(self.sfm_event)
 
     def sfm_event(self, name, data):
+        """
+        Handle SFM (flash) events. We can use these
+        to find out the statistics from the battle
+        result screen or changes to the players division
+        state.
+        """
         if name == "sfm.showResultScreen":
             with open('api/results.%s' % (self.battle_timestamp), 'w') as f:
                 # Save the result screen information
@@ -74,6 +86,11 @@ class StHub:
             self.in_division = False
 
     def shell_info(self, victim, shooter, ammo, mat, shoot, flags, damage, pos, yaw, hlinfo):
+        """
+        Handle shell information to determine damage, kills, and getting killed.
+        This is somewhat useful for when the battle results screen will
+        not be opened.
+        """
         if (flags & 0b1) == 0:
             self.battle_damage = self.battle_damage + damage
             if flags & 0b1000:
@@ -83,6 +100,10 @@ class StHub:
                 self.alive = False
 
     def battle_start(self):
+        """
+        A battle started. This function will report it to the
+        modification via a file.
+        """
         self.battle_timestamp = utils.timeNowUTC().strftime("%Y%m%d%H%M%S")
 
         selfInfo = battle.getSelfPlayerInfo()
@@ -103,6 +124,12 @@ class StHub:
         self.start_data = data
 
     def battle_quit(self, _m):
+        """
+        A battle was quit. This can happen prematurely, for example
+        when a player dies and leaves the battle. This event will also
+        be triggered after a battle ended, so we need to ensure that
+        we do not send it twice.
+        """
         if self.sent_battle_end:
             return
 
@@ -123,6 +150,10 @@ class StHub:
             f.write(utils.jsonEncode(data))
 
     def battle_end(self, winLoss, _unknown):
+        """
+        A battle has ended (win/loss/draw, time exceeded). This function
+        will report the basic results to the modification.
+        """
         self.sent_battle_end = True
 
         data = {
