@@ -4,15 +4,16 @@ import "time"
 
 // Battle is a match played in the game
 type Battle struct {
-	ID         string // xid of the battle
-	FinishedAt *time.Time
-	StartedAt  *time.Time
-	Timestamp  string // Timestamp from the game mod
-	Status     string
-	ShipID     uint64
-	ShipName   string
-	Statistics Statistics
-	Results    *Results `json:",omitempty"`
+	ID          string // xid of the battle
+	FinishedAt  *time.Time
+	StartedAt   *time.Time
+	Timestamp   string // Timestamp from the game mod
+	Status      string
+	ShipID      uint64
+	ShipName    string
+	Statistics  Statistics
+	Results     *Results     `json:",omitempty"`
+	Matchmaking *Matchmaking `json:",omitempty"`
 }
 
 // Statistics contains basic statistics used by the frontend
@@ -67,6 +68,28 @@ type Results struct {
 		Credits uint64
 		BaseExp uint64
 	}
+}
+
+// Matchmaking is a struct representing the bracket of tiers the battle was played in, and which ship ids
+// participated in it. This data might be useful to determine how well you performed facing different ships.
+// It will not be an ultimate factor, because player skill always needs to be taken into account.
+type Matchmaking struct {
+	Bracket struct {
+		Min uint
+		Max uint
+	}
+
+	// A list of X teams with Y participants
+	Participants [][]Participant
+}
+
+// Participant represents a single player in a battle
+type Participant struct {
+	PlayerID uint64
+	ShipID   uint64
+
+	// TODO: can we use this?
+	Division uint64
 }
 
 // CorrectableUInt is a container for a value that can be manually corrected
