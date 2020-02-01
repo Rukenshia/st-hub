@@ -1,7 +1,3 @@
-.PHONY: seed
-seed:
-	./seed.sh
-
 .PHONY: init
 init:
 	go get github.com/GeertJohan/go.rice/rice
