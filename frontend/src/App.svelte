@@ -1,5 +1,5 @@
 <script>
-	import { activeBattle, battles, darkMode, iteration } from './stores';
+	import { activeBattle, battles, darkMode, iteration, shipInfo } from './stores';
 	import AppBar from './AppBar.svelte';
 	import VersionNotice from './VersionNotice.svelte';
 	import axios from 'axios';
@@ -12,6 +12,9 @@
 
   // SVG
   import SpaceSvg from './svg/space.svelte';
+
+  // Utility
+  import { getShipInfo } from './wows';
 
   let apiError = false;
   let version;
@@ -74,6 +77,13 @@
       if (apiError) {
         return false;
       }
+
+      $shipInfo = await Promise.all(
+        $iteration.Ships.map(({ ID }) => getShipInfo(ID))
+      ).then(ships => ships.reduce((prev, cur) => ({
+        ...prev,
+        [`${cur.ship_id}`]: cur,
+      }), {}));
 
       const resBattles = await fetchBattles();
       $battles = resBattles.data === null ? [] : resBattles.data.reverse();

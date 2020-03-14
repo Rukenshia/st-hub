@@ -1,7 +1,9 @@
 <script>
+  import { shipInfo } from './stores';
   import ShipBasicAverageStats from './ShipBasicAverageStats.svelte';
   import TeamSvg from './svg/team.svelte';
   import DivisionRate from './DivisionRate.svelte';
+  import ShipName from './ShipName.svelte';
 
   export let battles;
   export let ship;
@@ -13,8 +15,7 @@
 @import '@material/layout-grid/mdc-layout-grid';
 
 .ship-card__title {
-  margin: 0;
-
+  margin-left: -0.4rem;
   font-weight: normal;
 }
 
@@ -52,7 +53,16 @@
       <div class="mdc-layout-grid__inner">
         <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
           <h2 class="ship-card__title mdc-typography--headline6">
+            {#if $shipInfo[ship.ID]}
+            <ShipName
+              name={$shipInfo[ship.ID].name}
+              nation={$shipInfo[ship.ID].nation}
+              tier={$shipInfo[ship.ID].tier}
+              type={$shipInfo[ship.ID].type}
+              />
+            {:else}
             {ship.Name}
+            {/if}
           </h2>
           <div class="-mt-1"><DivisionRate {battles} /></div>
         </div>

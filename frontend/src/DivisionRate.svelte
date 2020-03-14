@@ -14,18 +14,16 @@
 
 <style>
   .bad {
+    @apply text-red-600;
+
     font-weight: 500;
-    color: #da3c3c;
   }
 
   .rate {
   }
 </style>
 
-<div class="flex items-center">
-  <div class="w-4 h-auto mr-2">
-    <TeamSvg />
-  </div>
+<div class="flex items-center text-sm text-gray-500">
   <span class="rate" class:bad={$rate >= 50}>{$rate}%</span>
   <div>&nbsp;in division</div>
 </div>
