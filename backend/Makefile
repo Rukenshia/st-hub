@@ -2,7 +2,7 @@
 
 build: gomodgen
 	export GO111MODULE=on
-	env GOOS=linux go build -ldflags="-s -w" -o bin/update-testships hello/main.go
+	env GOOS=linux go build -ldflags="-s -w" -o bin/update-testships ./update-testships
 
 clean:
 	rm -rf ./bin ./vendor Gopkg.lock

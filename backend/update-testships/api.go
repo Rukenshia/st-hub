@@ -180,8 +180,6 @@ func (w *WowsAPI) GetWarships() (map[string]*Ship, error) {
 }
 
 func (w *WowsAPI) getPage(url string, pageNo uint, response interface{}) (interface{}, error) {
-	log.Printf("getPage url=%s pageNo=%d", url, pageNo)
-
 	resp, err := w.client.R().
 		SetQueryParam("page_no", fmt.Sprintf("%d", pageNo)).
 		SetQueryParam("application_id", w.applicationID).

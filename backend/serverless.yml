@@ -26,4 +26,4 @@ functions:
     events:
       - http:
           path: update-testships
-          method: get
+          method: post
