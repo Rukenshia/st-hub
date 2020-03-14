@@ -121,7 +121,7 @@
 
             <h2 class="text-xl">Effectiveness</h2>
             <div class="p-2">
-              <ShipBasicAverageStats battles={$shipBattles} />
+              <ShipBasicAverageStats uid={ship.Name} battles={$shipBattles} />
             </div>
 
             <h2 class="text-xl">Survivability</h2>

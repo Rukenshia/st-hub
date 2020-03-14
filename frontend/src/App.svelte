@@ -133,7 +133,7 @@ body {
 		background-color: #121212;
 
 		.mdc-card {
-			background-color: lighten(#121212, 5%);
+			background-color: lighten(#121212, 5%) !important;
 		}
 
 		svg {

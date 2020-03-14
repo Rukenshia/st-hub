@@ -69,7 +69,7 @@
     </div>
 
     <div class="ship-card__content" class:max-h-0={!showInfo} class:max-h-300={showInfo}>
-      <ShipBasicAverageStats battles={$battles} />
+      <ShipBasicAverageStats uid={ship.Name} battles={$battles} />
       <div class="pb-8 mb-2 ml-2 mt-2 h-0">
         <a href={`/details/${ship.ID}`} class="px-3 py-2 text-teal-500 hover:text-teal-600 font-medium">
           More details
