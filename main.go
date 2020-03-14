@@ -20,6 +20,7 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 
+	"github.com/asticode/go-astikit"
 	"github.com/asticode/go-astilectron"
 
 	rice "github.com/GeertJohan/go.rice"
@@ -40,11 +41,13 @@ func main() {
 	defer os.Remove(iconPath)
 
 	// Initialize astilectron
-	var a, _ = astilectron.New(astilectron.Options{
-		AppName:            "StHub",
-		AppIconDefaultPath: iconPath,
-		// BaseDirectoryPath: "<where you want the provisioner to install the dependencies>",
-	})
+	var a, _ = astilectron.New(
+		log.New(os.Stderr, "", 0),
+		astilectron.Options{
+			AppName:            "StHub",
+			AppIconDefaultPath: iconPath,
+			// BaseDirectoryPath: "<where you want the provisioner to install the dependencies>",
+		})
 	defer a.Close()
 
 	// Start astilectron
@@ -67,9 +70,9 @@ func main() {
 
 	if !hasLocalConfig() {
 		var w, _ = a.NewWindow("https://sthub.in.fkn.space/#setup", &astilectron.WindowOptions{
-			Center: astilectron.PtrBool(true),
-			Height: astilectron.PtrInt(800),
-			Width:  astilectron.PtrInt(600),
+			Center: astikit.BoolPtr(true),
+			Height: astikit.IntPtr(800),
+			Width:  astikit.IntPtr(600),
 		})
 
 		w.OnMessage(func(m *astilectron.EventMessage) interface{} {
@@ -96,9 +99,9 @@ func main() {
 		w.Create()
 	} else {
 		var w, _ = a.NewWindow("https://sthub.in.fkn.space", &astilectron.WindowOptions{
-			Center: astilectron.PtrBool(true),
-			Height: astilectron.PtrInt(800),
-			Width:  astilectron.PtrInt(600),
+			Center: astikit.BoolPtr(true),
+			Height: astikit.IntPtr(800),
+			Width:  astikit.IntPtr(600),
 		})
 		w.Create()
 
