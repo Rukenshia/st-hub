@@ -23,11 +23,13 @@ import (
 	"github.com/asticode/go-astikit"
 	"github.com/asticode/go-astilectron"
 
+	"github.com/Masterminds/semver"
+
 	rice "github.com/GeertJohan/go.rice"
 )
 
 // VERSION represents the current version of StHub (this component)
-const VERSION = "0.5.0"
+var VERSION = semver.MustParse("0.5.0")
 
 func main() {
 	f, err := setupLogger()
@@ -35,6 +37,12 @@ func main() {
 		panic(err)
 	}
 	defer f.Close()
+
+	// Check for new version
+	if err := selfUpdate(); err != nil {
+		dialog.Message("%s: %v. %s", "Could not check for updates", err, "Please contact Rukenshia.").Title("StHub: ERR_SELF_UPDATE").Error()
+		log.Println(err)
+	}
 
 	// unpack logo
 	iconPath, err := unpackLogo()
@@ -192,7 +200,7 @@ func start(done chan bool, currentIteration *lib.TestIteration) {
 
 	testController.RegisterRoutes(e.Group("/iterations"))
 	e.GET("/version", func(c echo.Context) error {
-		c.String(200, VERSION)
+		c.String(200, VERSION.String())
 		return nil
 	})
 
