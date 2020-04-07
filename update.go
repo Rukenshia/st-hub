@@ -88,7 +88,7 @@ func selfUpdate() error {
 
 		log.Printf("Update applied successfully")
 
-		dialog.Message("Version %s is now installed. To apply the update, you need to restart StHub.").Title("StHub: Update finsihed").Info()
+		dialog.Message("Version %s is now installed. To apply the update, you need to restart StHub.", version.String()).Title("StHub: Update finsihed").Info()
 	}()
 
 	return nil
