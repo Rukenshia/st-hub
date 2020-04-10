@@ -3,6 +3,7 @@
 	import AppBar from './AppBar.svelte';
 	import VersionNotice from './VersionNotice.svelte';
 	import axios from 'axios';
+  import semver from 'semver';
   import { onMount } from 'svelte';
   import { Router, Link, Route } from "svelte-routing";
 
@@ -179,7 +180,7 @@ footer {
 
 <AppBar iteration={$iteration} {version} {apiError} />
 
-{#if version && version !== availableVersion}
+{#if version && semver.gt(availableVersion, version)}
 <VersionNotice {availableVersion} {version} />
 {/if}
 
