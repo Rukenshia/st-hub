@@ -19,7 +19,9 @@ steps:
     region: eu-central-1
     source: frontend/public
     target: /
+    delete: true
     cloudfront_distribution: E2OHW6JPREC4E4
+    cache_control: "public, max-age: 60"
 
 ---
 kind: pipeline
