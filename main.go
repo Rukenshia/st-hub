@@ -30,7 +30,7 @@ import (
 )
 
 // VERSION represents the current version of StHub (this component)
-var VERSION = semver.MustParse("0.6.2")
+var VERSION = semver.MustParse("0.6.3")
 
 func main() {
 	f, err := setupLogger()
@@ -113,6 +113,9 @@ func main() {
 			Width:  astikit.IntPtr(600),
 		})
 		w.Create()
+		go func() {
+			w.Session.ClearCache()
+		}()
 
 		start(done, currentIteration)
 	}
