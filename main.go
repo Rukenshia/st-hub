@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
 	"path"
@@ -29,7 +30,7 @@ import (
 )
 
 // VERSION represents the current version of StHub (this component)
-var VERSION = semver.MustParse("0.6.0")
+var VERSION = semver.MustParse("0.6.1")
 
 func main() {
 	f, err := setupLogger()
@@ -106,7 +107,7 @@ func main() {
 
 		w.Create()
 	} else {
-		var w, _ = a.NewWindow("https://sthub.in.fkn.space", &astilectron.WindowOptions{
+		var w, _ = a.NewWindow(fmt.Sprintf("https://sthub.in.fkn.space?n=%d", rand.Int31()), &astilectron.WindowOptions{
 			Center: astikit.BoolPtr(true),
 			Height: astikit.IntPtr(800),
 			Width:  astikit.IntPtr(600),
