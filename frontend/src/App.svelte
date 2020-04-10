@@ -20,7 +20,7 @@
   let version;
   let url = window.location.pathname;
 
-  const availableVersion = '0.6.1';
+  const availableVersion = '0.6.2';
   let loaded = false;
 
 	const fetchIntegration = () => {

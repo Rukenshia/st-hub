@@ -30,7 +30,7 @@ import (
 )
 
 // VERSION represents the current version of StHub (this component)
-var VERSION = semver.MustParse("0.6.1")
+var VERSION = semver.MustParse("0.6.2")
 
 func main() {
 	f, err := setupLogger()
