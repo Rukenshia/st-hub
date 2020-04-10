@@ -29,7 +29,7 @@ func selfUpdate() error {
 		return err
 	}
 
-	if VERSION.GreaterThan(version) {
+	if !VERSION.LessThan(version) {
 		log.Printf("Current version is latest, skip download")
 		return nil
 	}
