@@ -42,7 +42,7 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 	filteredShips := []MinimalShip{}
 	for _, ship := range ships {
 		for _, name := range names {
-			if ship.Name == name {
+			if strings.Contains(ship.Name, name) {
 				filteredShips = append(filteredShips, MinimalShip{
 					Name: ship.Name,
 					ID:   ship.ShipID,
