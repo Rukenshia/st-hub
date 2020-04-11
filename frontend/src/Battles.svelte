@@ -80,6 +80,10 @@
     text-overflow: '';
   }
 
+  .form-select.ship-filter {
+    @apply border-gray-600 bg-gray-900 text-gray-50;
+  }
+
   .battles-header {
     margin-bottom: 0;
     padding-bottom: 0;
@@ -94,7 +98,7 @@
     <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-2 mdc-layout-grid__cell--align-middle">
       <div>
         <div class="mt-1 relative rounded-md shadow-sm">
-          <select class="form-select block border-gray-600 bg-gray-900 text-gray-50 w-full sm:text-sm sm:leading-5" bind:value={$selectedShip}>
+          <select class="form-select ship-filter block w-full sm:text-sm sm:leading-5" bind:value={$selectedShip}>
             <option value="all">All ships</option>
             {$shipNames}
             {#each $shipNames as name}
