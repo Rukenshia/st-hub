@@ -22,7 +22,7 @@ header.mdc-top-app-bar {
   <div class="mdc-top-app-bar__row">
     <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
       <section class="mdc-top-app-bar__section">
-        <span class="mdc-typography--headline6">You are running version {version}, but {availableVersion} is available. Please update it <a target="_blank" href="https://github.com/Rukenshia/st-hub/releases/tag/{availableVersion}">here</a>.</span>
+        <span class="text-md">You are running version {version}, but {availableVersion} is available. Please update it <a target="_blank" href="https://github.com/Rukenshia/st-hub/releases/tag/{availableVersion}">here</a>.</span>
       </section>
     </section>
   </div>

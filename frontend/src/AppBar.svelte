@@ -30,12 +30,12 @@
 
 </style>
 
-<div class="bg-gray-800">
-  <nav class="bg-gray-800">
+<div class="bg-gray-900">
+  <nav class="bg-gray-900">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 px-4 sm:px-0">
           <div class="flex items-center">
-              <div class="ml-10 flex items-baseline">
+              <div class="ml-10 f lex items-baseline">
                 <a href="#" class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300">StHub {version}</a>
                 <a href="#" class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300">Client {iteration.ClientVersion}</a>
                 <a href="#" class="ml-4 px-3 py-2 rounded-md text-sm font-medium text-gray-300">Test Iteration {iteration.IterationName}</a>

@@ -19,7 +19,7 @@ export default {
     }),
     svelte({
       preprocess: autoPreprocess({
-        postcss: {plugins: [require('tailwindcss')], extract: true},
+        postcss: {plugins: [require('tailwindcss'), require('autoprefixer')], extract: true},
       }),
       // enable run-time checks when not in production
       dev: !production,

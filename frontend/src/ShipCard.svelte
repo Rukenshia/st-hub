@@ -52,7 +52,7 @@
     <div class="ship-header mdc-layout-grid mdc-layout-grid--fixed-column-width mdc-layout-grid--align-left">
       <div class="mdc-layout-grid__inner">
         <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
-          <h2 class="ship-card__title mdc-typography--headline6">
+          <h2 class="ship-card__title text-2xl">
             {#if $shipInfo[ship.ID]}
             <ShipName
               name={$shipInfo[ship.ID].name}

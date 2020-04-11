@@ -66,7 +66,7 @@
         <div class="mdc-dialog__content" id="my-dialog-content">
           <div class="mdc-text-field correctable-text-field mdc-text-field--with-trailing-icon">
             <input type="text" id="field" class="mdc-text-field__input" bind:value={buffer}>
-            <label class="mdc-floating-label" for="field">{label}</label>
+            <label class="absolute left-2 top-1 text-cool-gray-400 text-sm" for="field">{label}</label>
             <div class="mdc-line-ripple"></div>
           </div>
         </div>
@@ -90,7 +90,7 @@
 
     <div style="position:absolute; left:0; right:0; top:0; bottom:0;"></div> <!-- hack to make clicking work on all platforms-->
 
-    <label class="mdc-floating-label" for="field">{label}</label>
+    <label class="absolute left-2 top-1 text-cool-gray-400 text-sm" for="field">{label}</label>
     {#if !noEdit}
     <i class="material-icons mdc-text-field__icon">edit</i>
     {/if}

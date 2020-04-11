@@ -23,6 +23,6 @@
 
   <div style="position:absolute; left:0; right:0; top:0; bottom:0;"></div> <!-- hack to make clicking work on all platforms-->
 
-  <label class="mdc-floating-label" for="field">{label}</label>
+  <label class="absolute left-2 top-1 text-cool-gray-400 text-sm" for="field">{label}</label>
   <div class="mdc-line-ripple"></div>
 </div>

@@ -49,7 +49,7 @@
               <div class="mdc-layout-grid__inner">
                 <div class="mdc-layout-grid__cell">
                   <h2
-                    class="battle-card__title mdc-typography--headline5">
+                    class="battle-card__title text-2xl">
                     {battle.ShipName}
                   </h2>
                 </div>
@@ -106,8 +106,8 @@
       {#if !battle.Results}
       <div class="mdc-layout-grid">
         <div class="mdc-layout-grid__inner">
-          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12 bg-yellow-500 text-gray-900 p-4 rounded-sm">
-            This battle does not contain 100% accurate data, because you left it before the game ended. To collect all data, please stay until you see the "Results screen" of a battle.
+          <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12 bg-yellow-400 text-yellow-900 p-4 rounded-sm">
+            This battle does not contain accurate data because you left it before the game ended. To collect all data, please stay until you see the "Results screen" of a battle.
           </div>
         </div>
       </div>

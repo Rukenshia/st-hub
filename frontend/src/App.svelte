@@ -96,7 +96,21 @@
 
       setInterval(async () => {
         const resBattles = await fetchBattles();
-        $battles = resBattles.data === null ? [] : resBattles.data.reverse();
+
+        if (resBattles.data === null) {
+          $battles = [];
+          return;
+        }
+
+        // check if there are any new battles
+        const reversedBattles = resBattles.data.reverse();
+
+        if (JSON.stringify(reversedBattles) === JSON.stringify($battles)) {
+          // Don't set same data again to prevent UI reloads
+          return;
+        }
+
+        $battles = reversedBattles;
         $activeBattle = $battles.find(b => b.Status === 'active');
       }, 2500);
 
@@ -128,23 +142,19 @@
 </script>
 
 <style global lang="scss">
-@tailwind base;
-@tailwind utilities;
-@tailwind components;
-
-@import '@material/typography/mdc-typography';
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 body {
-	@include mdc-typography-base();
 	width: 100%;
 
 
 	&.dark {
-		color: #cecece;
-		background-color: #121212;
+    @apply bg-cool-gray-800 text-gray-50;
 
-		.mdc-card {
-			background-color: lighten(#121212, 5%) !important;
+		.mdc-card,.mdc-card.ship-card {
+      @apply bg-cool-gray-900;
 		}
 
 		svg {
@@ -161,7 +171,7 @@ body {
     }
 
     .input-dialog.mdc-dialog .mdc-dialog__surface  {
-      background-color: lighten(#121212, 15%);
+      @apply bg-cool-gray-900;
       color: #cecece;
 
       .mdc-dialog__title,.mdc-dialog__content {
@@ -201,7 +211,7 @@ footer {
 {/if}
 
 <footer>
-	<div class="mdc-typography--subtitle2" style="text-align: center;">
+	<div class="text-sm" style="text-align: center;">
 		<div>Made with ❤️ by Rukenshia#4396(Discord), Email: <a href="mailto:svc-sthub@ruken.pw">svc-sthub@ruken.pw</a></div>
 		<br />
 		<br />

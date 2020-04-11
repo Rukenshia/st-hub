@@ -36,8 +36,6 @@
 @tailwind base;
 @tailwind utilities;
 @tailwind components;
-
-@import '@material/typography/mdc-typography';
 </style>
 
 <Banner />
