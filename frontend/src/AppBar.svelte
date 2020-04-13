@@ -32,13 +32,13 @@
 
 <div class="bg-gray-900">
   <nav class="bg-gray-900">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16 px-2 sm:px-0">
+    <div class="max-w-7xl mx-auto sm:px-2 lg:px-4">
+        <div class="flex items-center justify-between h-16">
           <div class="flex items-center">
-              <div class="ml-10 f lex items-baseline">
-                <a href="#" class="ml-4 px-2 py-2 rounded-md text-sm font-medium text-gray-300">StHub {version}</a>
-                <a href="#" class="ml-4 px-2 py-2 rounded-md text-sm font-medium text-gray-300">WoWS {iteration.ClientVersion}</a>
-                <a href="#" class="ml-4 px-2 py-2 rounded-md text-sm font-medium text-gray-300">Test Iteration {iteration.IterationName}</a>
+              <div class="ml-10 flex items-baseline">
+                <a href="#" class="ml-4 px-2 py-2 rounded-md text-sm font-medium text-gray-300"><span class="text-gray-400">StHub</span> {version}</a>
+                <a href="#" class="ml-4 px-2 py-2 rounded-md text-sm font-medium text-gray-300"><span class="text-gray-400">WoWS</span> {iteration.ClientVersion}</a>
+                <a href="#" class="ml-4 px-2 py-2 rounded-md text-sm font-medium text-gray-300"><span class="text-gray-400">Test Iteration</span> {iteration.IterationName}</a>
               </div>
           </div>
   </nav>

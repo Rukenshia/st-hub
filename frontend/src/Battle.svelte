@@ -49,7 +49,7 @@
               <div class="mdc-layout-grid__inner">
                 <div class="mdc-layout-grid__cell">
                   <h2
-                    class="battle-card__title text-2xl">
+                    class="battle-card__title text-lg">
                     {battle.ShipName}
                   </h2>
                 </div>
