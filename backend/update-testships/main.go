@@ -4,12 +4,14 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"log"
 	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
 	resty "github.com/go-resty/resty/v2"
+	"github.com/sahilm/fuzzy"
 )
 
 // Response is of type APIGatewayProxyResponse since we're leveraging the
@@ -19,8 +21,18 @@ import (
 type Response events.APIGatewayProxyResponse
 
 type MinimalShip struct {
-	Name string `json:"name"`
-	ID   uint   `json:"id"`
+	Name   string `json:"name"`
+	ShipID uint   `json:"id"`
+}
+
+type MinimalShips []MinimalShip
+
+func (s MinimalShips) String(i int) string {
+	return s[i].Name
+}
+
+func (s MinimalShips) Len() int {
+	return len(s)
 }
 
 // Handler is our lambda handler invoked by the `lambda.Start` function call
@@ -38,17 +50,26 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 		log.Panicf("Could not get all warships: %v", err)
 	}
 
-	names := strings.Split(request.Body, ",")
-	filteredShips := []MinimalShip{}
+	shipsList := MinimalShips{}
+
 	for _, ship := range ships {
-		for _, name := range names {
-			if strings.Contains(ship.Name, name) {
-				filteredShips = append(filteredShips, MinimalShip{
-					Name: ship.Name,
-					ID:   ship.ShipID,
-				})
-			}
+		shipsList = append(shipsList, MinimalShip{
+			Name:   ship.Name,
+			ShipID: ship.ShipID,
+		})
+	}
+
+	names := strings.Split(request.Body, ",")
+
+	filteredShips := MinimalShips{}
+	for _, name := range names {
+		matches := fuzzy.FindFrom(name, shipsList)
+
+		if len(matches) == 0 {
+			return Response{StatusCode: 500}, fmt.Errorf("Ship %s not found", name)
 		}
+
+		filteredShips = append(filteredShips, shipsList[matches[0].Index])
 	}
 
 	body, err := json.Marshal(filteredShips)

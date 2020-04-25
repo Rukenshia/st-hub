@@ -18,16 +18,17 @@ type ActiveBattle struct {
 
 // TestController is a controller that holds info about all testing iterations
 type TestController struct {
-	files map[string]*TestIterationFile
+	configPath string
+	files      map[string]*TestIterationFile
 
 	activeBattle     *ActiveBattle
 	currentIteration *TestIterationFile
 }
 
 // NewTestController creates a new TestController
-func NewTestController(currentIteration *TestIteration) (*TestController, error) {
+func NewTestController(configPath string, currentIteration *TestIteration) (*TestController, error) {
 	// Load or create file
-	file, err := LoadOrCreateIterationFile(currentIteration)
+	file, err := LoadOrCreateIterationFile(configPath, currentIteration)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +64,7 @@ func (t *TestController) getFileFromContext(c echo.Context) (*TestIterationFile,
 	iterationName := fmt.Sprintf("%s-%s", c.Param("clientVersion"), c.Param("iteration"))
 	file, ok := t.files[iterationName]
 	if !ok {
-		lf, err := LoadTestIterationFile(iterationName)
+		lf, err := LoadTestIterationFile(t.configPath, iterationName)
 		if err != nil {
 			return nil, err
 		}

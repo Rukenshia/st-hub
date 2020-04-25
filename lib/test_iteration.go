@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"path/filepath"
 	"sthub/lib/battle"
 )
 
@@ -32,8 +33,8 @@ type TestIterationFile struct {
 }
 
 // LoadTestIterationFile loads a test iteration file from disk
-func LoadTestIterationFile(iterationName string) (*TestIterationFile, error) {
-	data, err := ioutil.ReadFile(fmt.Sprintf("sthub-%s.json", iterationName))
+func LoadTestIterationFile(configPath, iterationName string) (*TestIterationFile, error) {
+	data, err := ioutil.ReadFile(filepath.Join(configPath, fmt.Sprintf("sthub-%s.json", iterationName)))
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +44,7 @@ func LoadTestIterationFile(iterationName string) (*TestIterationFile, error) {
 		return nil, err
 	}
 
-	t.filename = fmt.Sprintf("sthub-%s.json", iterationName)
+	t.filename = filepath.Join(configPath, fmt.Sprintf("sthub-%s.json", iterationName))
 
 	return &t, nil
 }
@@ -53,12 +54,12 @@ func LoadTestIterationFile(iterationName string) (*TestIterationFile, error) {
 // Due to the nature of Wargaming's ST program, the testships during an iteration can change at
 // any time. To prevent inconsistencies (or forcing a new file while an iteration is still running),
 // the Ships on an existing file will always be overwritten.
-func LoadOrCreateIterationFile(currentIteration *TestIteration) (*TestIterationFile, error) {
-	filename := fmt.Sprintf("sthub-%s-%s.json", currentIteration.ClientVersion, currentIteration.IterationName)
+func LoadOrCreateIterationFile(configPath string, currentIteration *TestIteration) (*TestIterationFile, error) {
+	filename := filepath.Join(configPath, fmt.Sprintf("sthub-%s-%s.json", currentIteration.ClientVersion, currentIteration.IterationName))
 
 	var ti *TestIterationFile
 	if _, err := os.Stat(filename); err == nil {
-		ti, err = LoadTestIterationFile(fmt.Sprintf("%s-%s", currentIteration.ClientVersion, currentIteration.IterationName))
+		ti, err = LoadTestIterationFile(configPath, fmt.Sprintf("%s-%s", currentIteration.ClientVersion, currentIteration.IterationName))
 		if err != nil {
 			return nil, err
 		}

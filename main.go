@@ -9,7 +9,6 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"path"
 	"path/filepath"
 	"runtime"
 	"sthub/lib"
@@ -33,17 +32,23 @@ import (
 var VERSION = semver.MustParse("0.6.3")
 
 func main() {
-	f, err := setupLogger()
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
+	//f, err := setupLogger()
+	//if err != nil {
+	//panic(err)
+	//}
+	//defer f.Close()
 
 	// Check for new version
 	if err := selfUpdate(); err != nil {
 		dialog.Message("%s: %v. %s", "Could not check for updates", err, "Please contact Rukenshia.").Title("StHub: ERR_SELF_UPDATE").Error()
 		log.Println(err)
 	}
+
+	migratedFiles, err := Migrate063ConfigFiles("./")
+	if err != nil {
+		log.Fatalf("Could not migrate files: %v", err)
+	}
+	log.Printf("Migrated %d files", len(migratedFiles))
 
 	// unpack logo
 	iconPath, err := unpackLogo()
@@ -164,20 +169,6 @@ func unpackLogo() (string, error) {
 	return tmpfile.Name(), nil
 }
 
-// Returns whether a local config file exists
-func hasLocalConfig() bool {
-	execDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
-	if err != nil {
-		return false
-	}
-
-	if _, err := os.Stat(path.Join(execDir, "sthub-config.json")); os.IsNotExist(err) {
-		return false
-	}
-
-	return true
-}
-
 func start(done chan bool, currentIteration *lib.TestIteration) {
 	// Initialise the application
 	cfg, err := initApp(currentIteration)
@@ -186,7 +177,13 @@ func start(done chan bool, currentIteration *lib.TestIteration) {
 		os.Exit(1)
 	}
 
-	testController, err := lib.NewTestController(currentIteration)
+	configPath, err := GetConfigPath()
+	if err != nil {
+		dialog.Message("Could not find a configuration path, please contact Rukenshia").Title("ERR_LOAD_CFG_PATH").Error()
+		os.Exit(1)
+	}
+
+	testController, err := lib.NewTestController(configPath, currentIteration)
 	if err != nil {
 		dialog.Message("%s: %v. %s", "Could not create API Controller", err, "Please contact Rukenshia.").Title("StHub: LC_CURRENT_ITER").Error()
 		log.Fatalln(err)
@@ -231,14 +228,15 @@ func initApp(currentIteration *lib.TestIteration) (*Config, error) {
 	}
 
 	// Load local config
-	execDir, err := filepath.Abs(filepath.Dir(os.Args[0]))
+	configPath, err := GetConfigPath()
 	if err != nil {
-		return nil, fmt.Errorf("could not find executable path: %v", err)
+		dialog.Message("Could not find a configuration path, please contact Rukenshia").Title("ERR_LOAD_CFG_PATH").Error()
+		os.Exit(1)
 	}
 
 	var config Config
 
-	data, err := ioutil.ReadFile(filepath.Join(execDir, "sthub-config.json"))
+	data, err := ioutil.ReadFile(filepath.Join(configPath, "sthub-config.json"))
 	if err == nil {
 		if err := json.Unmarshal(data, &config); err != nil {
 			dialog.Message("%s", "Your sthub-config.json is corrupted. Please contact Rukenshia").Title("Fatal error").Error()
@@ -269,7 +267,7 @@ func initApp(currentIteration *lib.TestIteration) (*Config, error) {
 	if err != nil {
 		log.Fatalf("Could not marshal before save: %v", err)
 	}
-	if err := ioutil.WriteFile(filepath.Join(execDir, "sthub-config.json"), data, 0666); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(configPath, "sthub-config.json"), data, 0666); err != nil {
 		log.Fatalf("Could not write config: %v", err)
 	}
 
