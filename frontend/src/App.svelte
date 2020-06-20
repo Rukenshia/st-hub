@@ -1,15 +1,21 @@
 <script>
-	import { activeBattle, battles, darkMode, iteration, shipInfo } from './stores';
-	import AppBar from './AppBar.svelte';
-	import VersionNotice from './VersionNotice.svelte';
-	import axios from 'axios';
+  import {
+    activeBattle,
+    battles,
+    darkMode,
+    iteration,
+    shipInfo
+  } from './stores';
+  import AppBar from './AppBar.svelte';
+  import VersionNotice from './VersionNotice.svelte';
+  import axios from 'axios';
   import semver from 'semver';
   import { onMount } from 'svelte';
-  import { Router, Link, Route } from "svelte-routing";
+  import { Router, Link, Route } from 'svelte-routing';
 
   // Views
-	import Dashboard from './routes/Dashboard.svelte';
-	import ShipDetails from './routes/ShipDetails.svelte';
+  import Dashboard from './routes/Dashboard.svelte';
+  import ShipDetails from './routes/ShipDetails.svelte';
 
   // SVG
   import SpaceSvg from './svg/space.svelte';
@@ -21,11 +27,12 @@
   let version;
   let url = window.location.pathname;
 
-  const availableVersion = '0.7.0';
+  const availableVersion = '0.7.1';
   let loaded = false;
 
-	const fetchIntegration = () => {
-    return axios.get(`${ENDPOINT}/iterations/current`)
+  const fetchIntegration = () => {
+    return axios
+      .get(`${ENDPOINT}/iterations/current`)
       .then(r => {
         apiError = false;
         return r;
@@ -33,15 +40,20 @@
       .catch(err => {
         apiError = true;
 
-        return { data: { ClientVersion: 'n/a', IterationName: 'n/a', Ships: [] }};
+        return {
+          data: { ClientVersion: 'n/a', IterationName: 'n/a', Ships: [] }
+        };
       });
-	};
+  };
 
-	const fetchBattles = () => {
-    return axios.get(`${ENDPOINT}/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`)
+  const fetchBattles = () => {
+    return axios
+      .get(
+        `${ENDPOINT}/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`
+      )
       .then(r => {
         apiError = false;
-        setTimeout(() => loaded = true, 500);
+        setTimeout(() => (loaded = true), 500);
         return r;
       })
       .catch(err => {
@@ -49,10 +61,11 @@
 
         return { data: [] };
       });
-	};
+  };
 
-	const fetchVersion = () => {
-    return axios.get(`${ENDPOINT}/version`)
+  const fetchVersion = () => {
+    return axios
+      .get(`${ENDPOINT}/version`)
       .then(r => {
         apiError = false;
         return r.data;
@@ -62,14 +75,14 @@
 
         return null;
       });
-	};
+  };
 
-	onMount(async () => {
+  onMount(async () => {
     const tryConnect = async () => {
       version = await fetchVersion();
 
       if (apiError) {
-        return false
+        return false;
       }
 
       const res = await fetchIntegration();
@@ -81,10 +94,15 @@
 
       $shipInfo = await Promise.all(
         $iteration.Ships.map(({ ID }) => getShipInfo(ID))
-      ).then(ships => ships.reduce((prev, cur) => ({
-        ...prev,
-        [`${cur.ship_id}`]: cur,
-      }), {}));
+      ).then(ships =>
+        ships.reduce(
+          (prev, cur) => ({
+            ...prev,
+            [`${cur.ship_id}`]: cur
+          }),
+          {}
+        )
+      );
 
       const resBattles = await fetchBattles();
       $battles = resBattles.data === null ? [] : resBattles.data.reverse();
@@ -117,10 +135,10 @@
       return true;
     };
 
-    if (!await tryConnect()) {
+    if (!(await tryConnect())) {
       const loop = () => {
         setTimeout(async () => {
-          if (!await tryConnect()) {
+          if (!(await tryConnect())) {
             loop();
           }
         }, 2000);
@@ -128,93 +146,103 @@
 
       loop();
     }
+  });
 
-
-	});
-
-	darkMode.subscribe(v => {
-		if (v) {
-			document.body.classList.add('dark');
-		} else {
-			document.body.classList.remove('dark');
-		}
-	});
+  darkMode.subscribe(v => {
+    if (v) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  });
 </script>
 
 <style global lang="scss">
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
+  @import 'tailwindcss/base';
+  @import 'tailwindcss/components';
+  @import 'tailwindcss/utilities';
 
-body {
-	width: 100%;
+  body {
+    width: 100%;
 
+    &.dark {
+      @apply bg-cool-gray-800 text-gray-50;
 
-	&.dark {
-    @apply bg-cool-gray-800 text-gray-50;
+      .mdc-card,
+      .mdc-card.ship-card {
+        @apply bg-cool-gray-900;
+      }
 
-		.mdc-card,.mdc-card.ship-card {
-      @apply bg-cool-gray-900;
-		}
+      svg {
+        stroke: #cecece;
+        fill: #cecece;
+      }
 
-		svg {
-			stroke: #cecece;
-			fill: #cecece;
-    }
-
-    .mdc-text-field input:disabled {
-      color: #cecece;
-    }
-
-    #field-helper-text {
-      color: #cecece;
-    }
-
-    .input-dialog.mdc-dialog .mdc-dialog__surface  {
-      @apply bg-cool-gray-900;
-      color: #cecece;
-
-      .mdc-dialog__title,.mdc-dialog__content {
+      .mdc-text-field input:disabled {
         color: #cecece;
       }
-    }
-	}
-}
 
-footer {
-	a {
-		color: #cecece;
-	}
-}
+      #field-helper-text {
+        color: #cecece;
+      }
+
+      .input-dialog.mdc-dialog .mdc-dialog__surface {
+        @apply bg-cool-gray-900;
+        color: #cecece;
+
+        .mdc-dialog__title,
+        .mdc-dialog__content {
+          color: #cecece;
+        }
+      }
+    }
+  }
+
+  footer {
+    a {
+      color: #cecece;
+    }
+  }
 </style>
 
 <AppBar iteration={$iteration} {version} {apiError} />
 
 {#if version && semver.gt(availableVersion, version)}
-<VersionNotice {availableVersion} {version} />
+  <VersionNotice {availableVersion} {version} />
 {/if}
 
 {#if !loaded}
-
-<div class="mx-auto mt-32 w-1/2 mb-64">
-  <h1 class="text-2xl text-center pb-4">Loading your data</h1>
-  <SpaceSvg />
-</div>
-
+  <div class="mx-auto mt-32 w-1/2 mb-64">
+    <h1 class="text-2xl text-center pb-4">Loading your data</h1>
+    <SpaceSvg />
+  </div>
 {:else}
-
-<Router {url}>
-  <Route path="/" component="{Dashboard}"></Route>
-  <Route path="/details/:id" component="{ShipDetails}"></Route>
-</Router>
-
+  <Router {url}>
+    <Route path="/" component={Dashboard} />
+    <Route path="/details/:id" component={ShipDetails} />
+  </Router>
 {/if}
 
 <footer>
-	<div class="text-sm" style="text-align: center;">
-		<div>Made with ❤️ by Rukenshia#4396(Discord), Email: <a href="mailto:svc-sthub@ruken.pw">svc-sthub@ruken.pw</a></div>
-		<br />
-		<br />
-		<div>Icons made by <a href="https://www.freepik.com/" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/"                 title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
-	</div>
+  <div class="text-sm" style="text-align: center;">
+    <div>
+      Made with ❤️ by Rukenshia#4396(Discord), Email:
+      <a href="mailto:svc-sthub@ruken.pw">svc-sthub@ruken.pw</a>
+    </div>
+    <br />
+    <br />
+    <div>
+      Icons made by
+      <a href="https://www.freepik.com/" title="Freepik">Freepik</a>
+      from
+      <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>
+      is licensed by
+      <a
+        href="http://creativecommons.org/licenses/by/3.0/"
+        title="Creative Commons BY 3.0"
+        target="_blank">
+        CC 3.0 BY
+      </a>
+    </div>
+  </div>
 </footer>
