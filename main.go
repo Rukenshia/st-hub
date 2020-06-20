@@ -32,11 +32,11 @@ import (
 var VERSION = semver.MustParse("0.7.1")
 
 func main() {
-	//f, err := setupLogger()
-	//if err != nil {
-	//panic(err)
-	//}
-	//defer f.Close()
+	f, err := setupLogger()
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
 
 	// Check for new version
 	if err := selfUpdate(); err != nil {
