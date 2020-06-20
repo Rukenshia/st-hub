@@ -1,1 +1,2 @@
-Mikoyan,Riga,Pyotr B,Ochakov,Ägir,Shikishima,California,Kirov,Roosevelt,Siegfried,Champagne,Zarya S,Asama
+Rhein,Weser,Erich L,August von,Manfred von,Franklin D,Impero,Ludendorf,Zarya S,Petropa,Slava
+

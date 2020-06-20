@@ -1,20 +1,18 @@
 package main
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
-	"path/filepath"
 	"runtime"
 	"sthub/lib"
 	"sthub/lib/scraper"
 
 	"github.com/levigross/grequests"
+	"github.com/rs/xid"
 	"github.com/sqweek/dialog"
 
 	"github.com/labstack/echo/v4"
@@ -32,11 +30,11 @@ import (
 var VERSION = semver.MustParse("0.7.0")
 
 func main() {
-	//f, err := setupLogger()
-	//if err != nil {
-	//panic(err)
-	//}
-	//defer f.Close()
+	f, err := setupLogger()
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
 
 	// Check for new version
 	if err := selfUpdate(); err != nil {
@@ -60,7 +58,6 @@ func main() {
 		astilectron.Options{
 			AppName:            "StHub",
 			AppIconDefaultPath: iconPath,
-			// BaseDirectoryPath: "<where you want the provisioner to install the dependencies>",
 		})
 	defer a.Close()
 
@@ -227,26 +224,15 @@ func initApp(currentIteration *lib.TestIteration) (*Config, error) {
 		}, nil
 	}
 
-	// Load local config
-	configPath, err := GetConfigPath()
+	config, err := LoadConfigFromDefaultPath()
+
 	if err != nil {
-		dialog.Message("Could not find a configuration path, please contact Rukenshia").Title("ERR_LOAD_CFG_PATH").Error()
-		os.Exit(1)
-	}
-
-	var config Config
-
-	data, err := ioutil.ReadFile(filepath.Join(configPath, "sthub-config.json"))
-	if err == nil {
-		if err := json.Unmarshal(data, &config); err != nil {
-			dialog.Message("%s", "Your sthub-config.json is corrupted. Please contact Rukenshia").Title("Fatal error").Error()
-			os.Exit(1)
-		}
-	} else {
 		if os.IsNotExist(err) {
+			id := xid.New()
 			// Ask for WoWS Directory
-			config = Config{
+			config = &Config{
 				WowsPath: "/invalid/path",
+				UserID:   &id,
 			}
 		} else {
 			return nil, fmt.Errorf("could not read config file: %v", err)
@@ -263,78 +249,16 @@ func initApp(currentIteration *lib.TestIteration) (*Config, error) {
 		config.WowsPath = dir
 	}
 
-	data, err = json.Marshal(&config)
-	if err != nil {
-		log.Fatalf("Could not marshal before save: %v", err)
-	}
-	if err := ioutil.WriteFile(filepath.Join(configPath, "sthub-config.json"), data, 0666); err != nil {
-		log.Fatalf("Could not write config: %v", err)
+	if err := config.Save(); err != nil {
+		log.Fatalf("Could not save config: %v", err)
 	}
 
-	if err := checkRequiredFiles(filepath.Join(config.WowsPath, "res_mods", currentIteration.ClientVersion)); err != nil {
-		dialog.Message("%s", "The game modification will now be added to your client. If you have World of Warships running, you will have to restart it.").
-			Title("StHub Setup").
-			Info()
-	}
-
-	// Always install the mod
-	box := rice.MustFindBox("mod")
-
-	if err := os.MkdirAll(filepath.Join(config.WowsPath, "res_mods", currentIteration.ClientVersion, "PnFMods", "StHub", "api"), 0666); err != nil {
-		dialog.Message("%s: %v", "Could not create required directories for the mod", err).
-			Title("StHub Setup").
+	if message, err := installGameMod(config.WowsPath, currentIteration.ClientVersion); err != nil {
+		dialog.Message(message).
+			Title("StHub Setup Failure").
 			Error()
 		os.Exit(1)
 	}
 
-	pnfModsLoader, err := box.Bytes("PnFModsLoader.py")
-	if err != nil {
-		dialog.Message("%s: %v", "Could not load PnFModsLoader.py", err).
-			Title("StHub Setup").
-			Error()
-		os.Exit(1)
-	}
-	sthubMain, err := box.Bytes("PnFMods/StHub/Main.py")
-	if err != nil {
-		dialog.Message("%s: %v", "Could not load StHub/Main.py", err).
-			Title("StHub Setup").
-			Error()
-		os.Exit(1)
-	}
-
-	if err := ioutil.WriteFile(filepath.Join(config.WowsPath, "res_mods", currentIteration.ClientVersion, "PnFModsLoader.py"), pnfModsLoader, 0666); err != nil {
-		dialog.Message("%s: %v", "Could not write PnFModsLoader.py", err).
-			Title("StHub Setup").
-			Error()
-		os.Exit(1)
-	}
-
-	if err := ioutil.WriteFile(filepath.Join(config.WowsPath, "res_mods", currentIteration.ClientVersion, "PnFMods", "StHub", "Main.py"), sthubMain, 0666); err != nil {
-		dialog.Message("%s: %v", "Could not write StHub/Main.py", err).
-			Title("StHub Setup").
-			Error()
-		os.Exit(1)
-	}
-
-	return &config, nil
-}
-
-func checkRequiredFiles(gamePath string) error {
-	if _, err := os.Stat(filepath.Join(gamePath, "PnFModsLoader.py")); os.IsNotExist(err) {
-		return errors.New("PnFModsLoader.py does not exist")
-	}
-	if _, err := os.Stat(filepath.Join(gamePath, "PnFMods")); os.IsNotExist(err) {
-		return errors.New("PnFMods does not exist")
-	}
-	if _, err := os.Stat(filepath.Join(gamePath, "PnFMods", "StHub")); os.IsNotExist(err) {
-		return errors.New("StHub does not exist")
-	}
-	if _, err := os.Stat(filepath.Join(gamePath, "PnFMods", "StHub", "Main.py")); os.IsNotExist(err) {
-		return errors.New("Main.py does not exist")
-	}
-	if _, err := os.Stat(filepath.Join(gamePath, "PnFMods", "StHub", "api")); os.IsNotExist(err) {
-		return errors.New("api does not exist")
-	}
-
-	return nil
+	return config, nil
 }
