@@ -34,8 +34,8 @@ func New(wowsPath string, c *lib.TestController) *Scraper {
 }
 
 // Start starts the scraping process
-func (s *Scraper) Start(clientVersion string) error {
-	dir := filepath.Join(s.wowsPath, "res_mods", clientVersion, "PnFMods", "StHub", "api")
+func (s *Scraper) Start(clientPath string) error {
+	dir := filepath.Join(s.wowsPath, "bin", clientPath, "res_mods", "PnFMods", "StHub", "api")
 	if _, err := os.Stat(dir); os.IsNotExist(err) {
 		return fmt.Errorf("The modification is not installed correctly to %s", dir)
 	}

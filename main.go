@@ -213,7 +213,7 @@ func start(done chan bool, currentIteration *lib.TestIteration) {
 
 	scraper := scraper.New(cfg.WowsPath, testController)
 
-	if err := scraper.Start(currentIteration.ClientVersion); err != nil {
+	if err := scraper.Start(currentIteration.ClientDirectory); err != nil {
 		dialog.Message("%s: %v", "Could not start waiting for info", err).Title("StHub: ERR_SCRAPER_START").Error()
 		log.Fatalln(err)
 	}
