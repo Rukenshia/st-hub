@@ -1,0 +1,21 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: pull
+        uses: actions/checkout@v2
+      - name: lint
+        uses: docker://github/super-linter:v2.1.0
+        env:
+          VALIDATE_ALL_CODEBASE: true
