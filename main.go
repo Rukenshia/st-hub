@@ -14,7 +14,6 @@ import (
 	"sthub/lib"
 	"sthub/lib/scraper"
 
-	"github.com/levigross/grequests"
 	"github.com/sqweek/dialog"
 
 	"github.com/labstack/echo/v4"
@@ -29,7 +28,7 @@ import (
 )
 
 // VERSION represents the current version of StHub (this component)
-var VERSION = semver.MustParse("0.7.3")
+var VERSION = semver.MustParse("0.8.0")
 
 func main() {
 	f, err := setupLogger()
@@ -67,17 +66,22 @@ func main() {
 	// Start astilectron
 	a.Start()
 
-	// Find current test iteration
-	res, err := grequests.Get("https://hv59yay1u3.execute-api.eu-central-1.amazonaws.com/live/iteration/current", nil)
+	// Get current game version
+	gameVersion, err := lib.GetGameVersion()
 	if err != nil {
-		dialog.Message("%s: %v. %s", "Could not retrieve current test iteration", err, "Please contact Rukenshia.").Title("StHub: RETR_CURRENT_ITER").Error()
+		dialog.Message("%s: %v. %s", "Could not retrieve current game version", err, "Please contact Rukenshia.").Title("StHub: GET_GAME_VERSION").Error()
 		log.Fatalln(err)
 	}
 
-	currentIteration := new(lib.TestIteration)
-	if err := res.JSON(currentIteration); err != nil {
-		dialog.Message("%s: %v. %s", "Could not parse current test iteration", err, "Please contact Rukenshia.").Title("StHub: PARSE_CURRENT_ITER").Error()
+	testShips, err := lib.GetTestships()
+	if err != nil {
+		dialog.Message("%s: %v. %s", "Could not retrieve current test ships", err, "Please contact Rukenshia.").Title("StHub: GET_TESTSHIPS").Error()
 		log.Fatalln(err)
+	}
+
+	currentIteration := &lib.TestIteration{
+		ClientVersion: gameVersion,
+		Ships:         testShips,
 	}
 
 	done := make(chan bool)
@@ -229,6 +233,7 @@ func findModsDirectory(binPath, gameVersion string) (string, error) {
 		_, err := os.Stat(filepath.Join(binPath, file.Name(), "res_mods", gameVersion))
 
 		if err == os.ErrExist {
+			log.Printf("findModsDirectory.result=%s", filepath.Join(binPath, file.Name(), "res_mods", gameVersion))
 			return filepath.Join(binPath, file.Name(), "res_mods", gameVersion), nil
 		}
 	}

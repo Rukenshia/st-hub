@@ -32,7 +32,7 @@ func NewTestController(configPath string, currentIteration *TestIteration) (*Tes
 	if err != nil {
 		return nil, err
 	}
-	iterationName := fmt.Sprintf("%s-%s", currentIteration.ClientVersion, currentIteration.IterationName)
+	iterationName := string(currentIteration.ClientVersion)
 
 	var activeBattle *ActiveBattle
 	for _, b := range file.Battles {

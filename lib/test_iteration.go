@@ -10,17 +10,10 @@ import (
 	"sthub/lib/battle"
 )
 
-// TestShip represents basic info on a Warship for testing
-type TestShip struct {
-	ID   uint64
-	Name string
-}
-
 // TestIteration is a struct representing a raw iteration cycle
 type TestIteration struct {
-	ClientVersion string
-	IterationName string
-	Ships         []TestShip
+	ClientVersion GameVersion
+	Ships         []BasicShip
 }
 
 // TestIterationFile represents a on-disk stored
@@ -55,11 +48,11 @@ func LoadTestIterationFile(configPath, iterationName string) (*TestIterationFile
 // any time. To prevent inconsistencies (or forcing a new file while an iteration is still running),
 // the Ships on an existing file will always be overwritten.
 func LoadOrCreateIterationFile(configPath string, currentIteration *TestIteration) (*TestIterationFile, error) {
-	filename := filepath.Join(configPath, fmt.Sprintf("sthub-%s-%s.json", currentIteration.ClientVersion, currentIteration.IterationName))
+	filename := filepath.Join(configPath, fmt.Sprintf("sthub-%s.json", currentIteration.ClientVersion))
 
 	var ti *TestIterationFile
 	if _, err := os.Stat(filename); err == nil {
-		ti, err = LoadTestIterationFile(configPath, fmt.Sprintf("%s-%s", currentIteration.ClientVersion, currentIteration.IterationName))
+		ti, err = LoadTestIterationFile(configPath, string(currentIteration.ClientVersion))
 		if err != nil {
 			return nil, err
 		}
@@ -108,7 +101,7 @@ func (t *TestIteration) HasShip(id uint64) bool {
 }
 
 // GetShip returns info on a ship if it exists
-func (t *TestIteration) GetShip(id uint64) *TestShip {
+func (t *TestIteration) GetShip(id uint64) *BasicShip {
 	for _, s := range t.Ships {
 		if s.ID == id {
 			return &s
