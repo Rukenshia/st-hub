@@ -213,10 +213,27 @@ func start(done chan bool, currentIteration *lib.TestIteration) {
 
 	scraper := scraper.New(cfg.WowsPath, testController)
 
-	if err := scraper.Start(currentIteration.ClientDirectory, currentIteration.ClientVersion); err != nil {
+	if err := scraper.Start(cfg.APIPath); err != nil {
 		dialog.Message("%s: %v", "Could not start waiting for info", err).Title("StHub: ERR_SCRAPER_START").Error()
 		log.Fatalln(err)
 	}
+}
+
+func findModsDirectory(binPath, gameVersion string) (string, error) {
+	files, err := ioutil.ReadDir(binPath)
+	if err != nil {
+		return "", err
+	}
+
+	for _, file := range files {
+		_, err := os.Stat(filepath.Join(binPath, file.Name(), "res_mods", gameVersion))
+
+		if err == os.ErrExist {
+			return filepath.Join(binPath, file.Name(), "res_mods", gameVersion), nil
+		}
+	}
+
+	return "", errors.New("Could not find game directory")
 }
 
 func initApp(currentIteration *lib.TestIteration) (*Config, error) {
@@ -271,7 +288,15 @@ func initApp(currentIteration *lib.TestIteration) (*Config, error) {
 		log.Fatalf("Could not write config: %v", err)
 	}
 
-	if err := checkRequiredFiles(filepath.Join(config.WowsPath, "bin", currentIteration.ClientDirectory, "res_mods", currentIteration.ClientVersion)); err != nil {
+	modsDirectory, err := findModsDirectory(filepath.Join(config.WowsPath, "bin"), currentIteration.ClientVersion)
+	if err != nil {
+		dialog.Message("%s: %v", "Could not find mod directory. Is your game up to date?", err).
+			Title("StHub Setup").
+			Error()
+		os.Exit(1)
+	}
+
+	if err := checkRequiredFiles(modsDirectory); err != nil {
 		dialog.Message("%s", "The game modification will now be added to your client. If you have World of Warships running, you will have to restart it.").
 			Title("StHub Setup").
 			Info()
@@ -280,7 +305,7 @@ func initApp(currentIteration *lib.TestIteration) (*Config, error) {
 	// Always install the mod
 	box := rice.MustFindBox("mod")
 
-	if err := os.MkdirAll(filepath.Join(config.WowsPath, "bin", currentIteration.ClientDirectory, "res_mods", currentIteration.ClientVersion, "PnFMods", "StHub", "api"), 0666); err != nil {
+	if err := os.MkdirAll(filepath.Join(modsDirectory, "PnFMods", "StHub", "api"), 0666); err != nil {
 		dialog.Message("%s: %v", "Could not create required directories for the mod", err).
 			Title("StHub Setup").
 			Error()
@@ -302,19 +327,21 @@ func initApp(currentIteration *lib.TestIteration) (*Config, error) {
 		os.Exit(1)
 	}
 
-	if err := ioutil.WriteFile(filepath.Join(config.WowsPath, "bin", currentIteration.ClientDirectory, "res_mods", currentIteration.ClientVersion, "PnFModsLoader.py"), pnfModsLoader, 0666); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(modsDirectory, "PnFModsLoader.py"), pnfModsLoader, 0666); err != nil {
 		dialog.Message("%s: %v", "Could not write PnFModsLoader.py", err).
 			Title("StHub Setup").
 			Error()
 		os.Exit(1)
 	}
 
-	if err := ioutil.WriteFile(filepath.Join(config.WowsPath, "bin", currentIteration.ClientDirectory, "res_mods", currentIteration.ClientVersion, "PnFMods", "StHub", "Main.py"), sthubMain, 0666); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(modsDirectory, "PnFMods", "StHub", "Main.py"), sthubMain, 0666); err != nil {
 		dialog.Message("%s: %v", "Could not write StHub/Main.py", err).
 			Title("StHub Setup").
 			Error()
 		os.Exit(1)
 	}
+
+	config.APIPath = filepath.Join(modsDirectory, "PnFMods", "StHub")
 
 	return &config, nil
 }

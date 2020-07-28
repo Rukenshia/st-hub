@@ -11,6 +11,9 @@ import (
 type Config struct {
 	// WowsPath is the file path to the game directory
 	WowsPath string
+
+	// APIPath is the path used for the "scraper" component
+	APIPath string `json:""`
 }
 
 // GetConfigPath returns the path where sthub data should be stored

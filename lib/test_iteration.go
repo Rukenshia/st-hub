@@ -18,10 +18,9 @@ type TestShip struct {
 
 // TestIteration is a struct representing a raw iteration cycle
 type TestIteration struct {
-	ClientVersion   string
-	ClientDirectory string
-	IterationName   string
-	Ships           []TestShip
+	ClientVersion string
+	IterationName string
+	Ships         []TestShip
 }
 
 // TestIterationFile represents a on-disk stored
