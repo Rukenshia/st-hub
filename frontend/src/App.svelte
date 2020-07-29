@@ -93,7 +93,7 @@
       }
 
       $shipInfo = await Promise.all(
-        $iteration.Ships.map(({ ID }) => getShipInfo(ID))
+        $iteration.Ships.map(({ id }) => getShipInfo(id))
       ).then(ships =>
         ships.reduce(
           (prev, cur) => ({
