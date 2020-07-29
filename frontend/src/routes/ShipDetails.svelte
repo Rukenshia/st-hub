@@ -24,8 +24,8 @@
     return Math.round(data[0] / data[1]);
   }
 
-  let ship = derived(iteration, it => it ? it.Ships.find(s => `${s.ID}` === id) : { Name: '...' });
-  let shipBattles = derived(battles, newBattles => newBattles.filter(b => b.ShipID === $ship.ID));
+  let ship = derived(iteration, it => it ? it.Ships.find(s => `${s.id}` === id) : { name: '...' });
+  let shipBattles = derived(battles, newBattles => newBattles.filter(b => b.ShipID === $ship.id));
 
   let averageExp = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.Economics.BaseExp));
   let averageCredits = derived(shipBattles, newBattles => getAverage(newBattles, v => v.Results.Economics.Credits));

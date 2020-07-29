@@ -6,7 +6,6 @@ export const activeBattle = writable(undefined);
 
 export const iteration = writable({
   ClientVersion: '',
-  IterationName: '',
   Ships: [],
 });
 

@@ -53,15 +53,15 @@
       <div class="mdc-layout-grid__inner">
         <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-12">
           <h2 class="ship-card__title text-lg">
-            {#if $shipInfo[ship.ID]}
+            {#if $shipInfo[ship.id]}
             <ShipName
-              name={$shipInfo[ship.ID].name}
-              nation={$shipInfo[ship.ID].nation}
-              tier={$shipInfo[ship.ID].tier}
-              type={$shipInfo[ship.ID].type}
+              name={$shipInfo[ship.id].name}
+              nation={$shipInfo[ship.id].nation}
+              tier={$shipInfo[ship.id].tier}
+              type={$shipInfo[ship.id].type}
               />
             {:else}
-            {ship.Name}
+            {ship.name}
             {/if}
           </h2>
           <div class="-mt-1"><DivisionRate {battles} /></div>
@@ -79,9 +79,9 @@
     </div>
 
     <div class="ship-card__content" class:max-h-0={!showInfo} class:max-h-300={showInfo}>
-      <ShipBasicAverageStats uid={ship.Name} battles={$battles} />
+      <ShipBasicAverageStats uid={ship.name} battles={$battles} />
       <div class="pb-8 mb-2 ml-2 mt-2 h-0">
-        <a href={`/details/${ship.ID}`} class="px-3 py-2 text-teal-500 hover:text-teal-600 font-medium">
+        <a href={`/details/${ship.id}`} class="px-3 py-2 text-teal-500 hover:text-teal-600 font-medium">
           More details
           <!-- <span class="rounded-sm bg-teal-600 px-2 py-1 text-sm text-gray-200">new</span> -->
         </a>

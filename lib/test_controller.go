@@ -1,7 +1,6 @@
 package lib
 
 import (
-	"fmt"
 	"log"
 	"sthub/lib/battle"
 	"time"
@@ -61,7 +60,7 @@ func (t *TestController) SaveCurrentIteration() error {
 
 // getFileFromContext loads or returns the TestIterationFile from the parameters in the request
 func (t *TestController) getFileFromContext(c echo.Context) (*TestIterationFile, error) {
-	iterationName := fmt.Sprintf("%s-%s", c.Param("clientVersion"), c.Param("iteration"))
+	iterationName := c.Param("clientVersion")
 	file, ok := t.files[iterationName]
 	if !ok {
 		lf, err := LoadTestIterationFile(t.configPath, iterationName)
@@ -97,9 +96,9 @@ func (t *TestController) getFileFromContext(c echo.Context) (*TestIterationFile,
 
 // RegisterRoutes is used to register routes of the testcontroller to echo
 func (t *TestController) RegisterRoutes(g *echo.Group) {
-	g.GET("/:clientVersion/:iteration", t.GetIteration)
-	g.GET("/:clientVersion/:iteration/battles", t.GetBattles)
-	g.PUT("/:clientVersion/:iteration/battles/:battle", t.UpdateBattle)
+	g.GET("/:clientVersion", t.GetIteration)
+	g.GET("/:clientVersion/battles", t.GetBattles)
+	g.PUT("/:clientVersion/battles/:battle", t.UpdateBattle)
 
 	// Called by game modification
 	g.GET("/current", t.GetCurrentIteration)

@@ -10,7 +10,6 @@
 
   export let iteration = {
     ClientVersion: 'loading',
-    IterationName: 'loading',
     Ships: [],
   };
 
@@ -38,7 +37,6 @@
               <div class="ml-10 flex items-baseline">
                 <a href="#" class="ml-4 px-2 py-2 rounded-md text-sm font-medium text-gray-300"><span class="text-gray-400">StHub</span> {version}</a>
                 <a href="#" class="ml-4 px-2 py-2 rounded-md text-sm font-medium text-gray-300"><span class="text-gray-400">WoWS</span> {iteration.ClientVersion}</a>
-                <a href="#" class="ml-4 px-2 py-2 rounded-md text-sm font-medium text-gray-300"><span class="text-gray-400">Test Iteration</span> {iteration.IterationName}</a>
               </div>
           </div>
   </nav>

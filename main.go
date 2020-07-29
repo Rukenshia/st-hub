@@ -217,6 +217,8 @@ func start(done chan bool, currentIteration *lib.TestIteration) {
 
 	scraper := scraper.New(cfg.WowsPath, testController)
 
+	log.Printf("Starting scraper on %s", cfg.APIPath)
+
 	if err := scraper.Start(cfg.APIPath); err != nil {
 		dialog.Message("%s: %v", "Could not start waiting for info", err).Title("StHub: ERR_SCRAPER_START").Error()
 		log.Fatalln(err)
@@ -230,9 +232,10 @@ func findModsDirectory(binPath, gameVersion string) (string, error) {
 	}
 
 	for _, file := range files {
-		_, err := os.Stat(filepath.Join(binPath, file.Name(), "res_mods", gameVersion))
+		log.Printf("findModsDirectory.checking=%s", filepath.Join(binPath, file.Name(), "res_mods", gameVersion))
+		stat, err := os.Stat(filepath.Join(binPath, file.Name(), "res_mods", gameVersion))
 
-		if err == os.ErrExist {
+		if err == nil && stat.IsDir() {
 			log.Printf("findModsDirectory.result=%s", filepath.Join(binPath, file.Name(), "res_mods", gameVersion))
 			return filepath.Join(binPath, file.Name(), "res_mods", gameVersion), nil
 		}
@@ -293,7 +296,7 @@ func initApp(currentIteration *lib.TestIteration) (*Config, error) {
 		log.Fatalf("Could not write config: %v", err)
 	}
 
-	modsDirectory, err := findModsDirectory(filepath.Join(config.WowsPath, "bin"), currentIteration.ClientVersion)
+	modsDirectory, err := findModsDirectory(filepath.Join(config.WowsPath, "bin"), string(currentIteration.ClientVersion))
 	if err != nil {
 		dialog.Message("%s: %v", "Could not find mod directory. Is your game up to date?", err).
 			Title("StHub Setup").

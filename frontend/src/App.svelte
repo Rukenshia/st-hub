@@ -27,7 +27,7 @@
   let version;
   let url = window.location.pathname;
 
-  const availableVersion = '0.7.3';
+  const availableVersion = '0.8.0';
   let loaded = false;
 
   const fetchIntegration = () => {
@@ -41,7 +41,7 @@
         apiError = true;
 
         return {
-          data: { ClientVersion: 'n/a', IterationName: 'n/a', Ships: [] }
+          data: { ClientVersion: 'n/a', Ships: [] }
         };
       });
   };
@@ -49,7 +49,7 @@
   const fetchBattles = () => {
     return axios
       .get(
-        `${ENDPOINT}/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles`
+        `${ENDPOINT}/iterations/${$iteration.ClientVersion}/battles`
       )
       .then(r => {
         apiError = false;

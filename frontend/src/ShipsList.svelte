@@ -30,7 +30,7 @@
   <div class="mdc-layout-grid__inner">
     {#each ships as ship}
     <div class="mdc-layout-grid__cell mdc-layout-grid__cell--span-4">
-      <ShipCard {ship} battles={derived(battles, nb => nb.filter(b => b.ShipID === ship.ID))} />
+      <ShipCard {ship} battles={derived(battles, nb => nb.filter(b => b.ShipID === ship.id))} />
     </div>
     {/each}
   </div>

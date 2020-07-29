@@ -3,6 +3,13 @@ MOD_NAME = 'StHub'
 
 # devmenu.enable()
 
+log_file = open('sthub.mod.log', 'w')
+
+
+def log(message):
+    log_file.write('{} {}\n'.format(
+        utils.timeNow().strftime("%Y-%m-%d %H:%M:%S"), message))
+
 
 class StHub:
     """
@@ -96,6 +103,7 @@ class StHub:
         This is somewhat useful for when the battle results screen will
         not be opened.
         """
+        log('shell_info.start')
         if (flags & 0b1) == 0:
             self.battle_damage = self.battle_damage + damage
             if flags & 0b1000:
@@ -103,6 +111,7 @@ class StHub:
         else:
             if flags & 0b1000:
                 self.alive = False
+        log('shell_info.end')
 
     def battle_start(self):
         """
@@ -135,9 +144,12 @@ class StHub:
         be triggered after a battle ended, so we need to ensure that
         we do not send it twice.
         """
+        log('battle_quit.start')
         if self.sent_battle_end:
+            log('battle_quit.sent_end')
             return
 
+        log('battle_quit.pre_data')
         data = {
             'Status': 'abandoned',
             'Timestamp': self.start_data['Timestamp'],
@@ -147,10 +159,12 @@ class StHub:
             'Kills': self.kills,
             'Damage': self.battle_damage,
         }
+        log('battle_quit.post_data')
 
         if self.start_data['InDivision'] == False and self.in_division:
             data['InDivision'] = self.in_division
 
+        log('battle_quit.write_file')
         with open('api/battle.%s' % (self.battle_timestamp), 'w') as f:
             f.write(utils.jsonEncode(data))
 
@@ -159,8 +173,10 @@ class StHub:
         A battle has ended (win/loss/draw, time exceeded). This function
         will report the basic results to the modification.
         """
+        log('battle_end.start')
         self.sent_battle_end = True
 
+        log('battle_end.pre_data')
         data = {
             'Status': 'finished',
             'Timestamp': self.start_data['Timestamp'],
@@ -171,10 +187,12 @@ class StHub:
             'Kills': self.kills,
             'Damage': self.battle_damage,
         }
+        log('battle_end.post_data')
 
         if self.start_data['InDivision'] == False and self.in_division:
             data['InDivision'] = self.in_division
 
+        log('battle_end.write_file')
         with open('api/battle.%s' % (self.battle_timestamp), 'w') as f:
             f.write(utils.jsonEncode(data))
 

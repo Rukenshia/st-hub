@@ -28,7 +28,7 @@
     battle.Statistics[field].Corrected = parseInt(value, 10);
     $battles[idx].Statistics[field].Corrected = parseInt(value, 10);
 
-    return axios.put(`${ENDPOINT}/iterations/${$iteration.ClientVersion}/${$iteration.IterationName}/battles/${battle.ID}`, battle)
+    return axios.put(`${ENDPOINT}/iterations/${$iteration.ClientVersion}/battles/${battle.ID}`, battle)
       .catch(err => {
         alert(`Please go talk to rukenshia: ${err}`)
       });
